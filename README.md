@@ -1,5 +1,5 @@
-[![EPNTAP version](https://img.shields.io/badge/ObsCore-REC--1.1-yellow.svg)](https://ivoa.net/documents/ObsCore/)
-[![PDF-Preview](https://img.shields.io/badge/Preview-PDF-blue)](../../releases/download/auto-pdf-preview/ObsCore.pdf)
+[![ObsCore REC v1.1](https://img.shields.io/badge/ObsCore-REC--1.1-yellow.svg)](https://ivoa.net/documents/ObsCore/)
+[![PDF-Preview](https://img.shields.io/badge/Preview-PDF-blue)](../../releases/download/auto-pdf-preview/ObsCore-draft.pdf)
 
 # Observation Data Model Core Components and its Implementation in the Table Access Protocol
 
