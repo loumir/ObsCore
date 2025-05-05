@@ -18,9 +18,9 @@
        {Fran\c{c}ois Bonnarel}
 \author{Alberto Micol}
 
-\editor{????Alfred Usher Thor????}
+\editor{Dowler, P., Louys,M., Servillat, M.}
 
-% \previousversion[????URL????]{????Concise Document Label????}
+% \previousversion[????URL????]{ObsCore}
 \previousversion[http://www.ivoa.net/Documents/ObsCore/20161004/PR-ObsCore-v1.1-20161004.pdf]{R-ObsCore-v1.1-20161004.pdf}
 \previousversion[https://www.ivoa.net/documents/ObsCore/20111028/REC-ObsCore-v1.0-20111028.pdf]{REC-ObsCore-v1.0-20111028.pdf}
 
@@ -43,7 +43,7 @@ ObsCoreDM makes use of STC, Utypes, Units and UCDs.  The ObsCoreDM can be serial
 reference to more complete data models such as Characterisation DM, Spectrum DM or Simple Spectral Line Data Model
 (SSLDM).
 
-ObsCore shares a large set of common concepts with DataSet Metadata Data Model \cite{CITATIONCre16l1036} which binds
+ObsCore shares a large set of common concepts with DataSet Metadata Data Model \citep{wd:DatasetDM} which binds
 together most of the data model concepts from the above models in a comprehensive and more general frame work. 
 
 This current specification on the contrary provides guidelines for implementing these concepts using the TAP protocol
@@ -130,7 +130,7 @@ TAP defines a service protocol for accessing tabular data such as astronomical c
 tables.  TAP allows a client to (step 1) browse through the various tables and columns (names, units, etc.) in an
 archive to collect the information necessary to pose a query, then (step 2) actually perform a table query.  The Table
 Access Protocol (TAP) specification was developed and reached recommendation status in March 2010
-\cite{2010ivoa.spec.0327D}.
+\citep{2010ivoa.spec.0327D}.
 
 \subsection{The goal of this effort}
 Building on the work done on data models and TAP, it becomes possible to define a standard service protocol to expose
@@ -222,9 +222,9 @@ The project of elaborating a general data model for the metadata necessary to de
 launched at the first Data Model WG meeting held in Cambridge, UK at the IVOA meeting in May 2003. The first
 Observation data model was sketched out relying on some key concepts: Dataset, Identification, Curation, physical
 Characterisation and Provenance (either instrumental or software).  A description of the early stages of this
-development can be found in \cite{???} (Observation IVOA note). Some of these concepts have already
-been elaborated in existing data models, namely the Spectrum data model \cite{2011ivoa.spec.1120M}  for general items
-such as dataset identification and curation, and the Characterisation data model \cite{2008ivoa.spec.0325L} for the
+development can be found in \citep{IVOANote:DMObservation} (Observation IVOA note). Some of these concepts have already
+been elaborated in existing data models, namely the Spectrum data model \citep{2011ivoa.spec.1120M}  for general items
+such as dataset identification and curation, and the Characterisation data model \citep{2008ivoa.spec.0325L} for the
 description of the physical axes and properties of an observation, such as coverage, resolution, sampling, and
 accuracy.  The Core Components data model reuses the relevant elements from those models.  Generalization of the
 observational model to support data from theoretical models (e.g., synthetic spectra) is possible but is not addressed
@@ -263,7 +263,7 @@ spectral quantities.
 describe time metadata.
 
 Details on the ObsCoreDM axes definitions are available in the Characterisation data model standard document
-\cite{2008ivoa.spec.0325L}. The hypertext documentation of the model is available on the IVOA web site under the
+\citep{2008ivoa.spec.0325L}. The hypertext documentation of the model is available on the IVOA web site under the
 ObsCore wiki page  \url{http://www.ivoa.net/internal/IVOA/ObsDMCoreComponents/} .
 
 \subsection[Main Concepts of the ObsCore Data Model]{Main Concepts of the ObsCore Data Model}
@@ -325,7 +325,7 @@ model with their name, recommended units, data type and designation.
 In order to support the global data discoverability and accessibility requirements, some new concepts previously not
 covered by any other data model have to be introduced.  This section describes those, which are: the data product type,
 a classification of the various levels of calibration and processing applied to the data, the file content and format
-enriched and extended from the concept described in the SSA protocol\cite{2012ivoa.spec.0210T}.  In addition, a
+enriched and extended from the concept described in the SSA protocol\citep{2012ivoa.spec.0210T}.  In addition, a
 clarification of how the terms Observation and Data Product are used in the ObsTAP context is provided as well as a
 discussion for composed products.
 
@@ -616,7 +616,7 @@ advanced data product is possible, but is out of scope for ObsTAP.
 Values in the obs\_id column must not be NULL.
 
 \subsection{Publisher Dataset Identifier (obs\_publisher\_did)}
-The obs\_publisher\_did column contains the IVOA dataset identifier \cite{2007ivoa.spec.0314P} for the published data
+The obs\_publisher\_did column contains the IVOA dataset identifier \citep{2007ivoa.spec.0314P} for the published data
 product.  This value must be unique within the namespace controlled by the dataset publisher (data center).  The value
 will also be globally unique since each publisher has a unique IVOA registered publisher ID.  The same dataset may
 however have more than one publisher dataset identifier if it is published in more than one location; the creator DID,
@@ -635,7 +635,7 @@ condition in the WHERE clause and implementers are free to generate the URL on t
 forced to store it statically in the database).
 
 More details are given on the use of CLOB data types for the TAP SCHEMA in the TAP Standard document
-\cite{2010ivoa.spec.0327D}, section 2.5 Table upload.
+\citep{2010ivoa.spec.0327D}, section 2.5 Table upload.
 
 Access URLs are not guaranteed to remain valid and unchanged indefinitely.  To access a specific data product after a
 period of time (e.g., days or weeks) a query should be performed (e.g., using obs\_publisher\_did) to obtain a fresh
@@ -646,7 +646,7 @@ access URL.
 data model field is important both for data discovery and for the client to evaluate whether it will be able to
 actually use the data product if downloaded.
 
-MIME types are often used to specify file formats in existing protocols such as HTTP \cite{std:MIME_types}.  However
+MIME types are often used to specify file formats in existing protocols such as HTTP \citep{std:MIME_types}.  However
 when dealing with astronomical observations as in ObsTAP services, more information about the format of the data is
 required than can be specified by conventional MIME types.  For instance we might want to distinguish between various
 formats like multi-extension FITS (e.g. for CCD mosaic instruments or MUSE IFU data), or ASDM (e.g. for ALMA or other
@@ -707,7 +707,7 @@ including custom binary file formats.
 
 Observational datasets consisting of multiple instrument-specific files may be exposed in formats like
 application/x-directory, application/x-tar or application/x-tar-gzip.  Details of the package content and how to access
-inner data products are described in the IVOA Data Link specification \cite{2015ivoa.spec.0617D}. See the example
+inner data products are described in the IVOA Data Link specification \citep{2015ivoa.spec.0617D}. See the example
 presented in section \ref{bkm:Ref303703299} .
 
 Compression is inherent in some file formats, e.g., ZIP or JPEG.  In other formats it is optional and is indicated by
@@ -757,7 +757,7 @@ standard way by the concept of Support in the Characterisation data model.
 
 We specify the data type as adql:VARCHAR so that users can specify spatial queries using a single column and in a
 limited number of ways. If implemented in TAP 1.0, and  included in the select list of the query, the output is always
-an STC-S string as described in \cite{2010ivoa.spec.0327D} [section 6]. In the WHERE clause, the s\_region column can be
+an STC-S string as described in \citep{2010ivoa.spec.0327D} [section 6]. In the WHERE clause, the s\_region column can be
 used with the ADQL geometry functions (INTERSECTS, CONTAINS) to specify conditions; the service will generally have to
 translate these into native SQL that enforces the same conditions or a suitable approximation. Implementers may
 approximate the spatial query conditions by translating the INTERSECTS and CONTAINS function calls in the query. 
@@ -828,7 +828,7 @@ Polarisation states can also be described as a simple list of values if the data
 See section  \ref{bkm:Ref482802717} for details.  
 
 \subsection{Observable Axis Description (o\_ucd)}
-The o\_ucd column specifies a UCD \cite{2007ivoa.spec.0402P} describing the nature of the observable within the data
+The o\_ucd column specifies a UCD \citep{2007ivoa.spec.0402P} describing the nature of the observable within the data
 product.  The observable is the measured quantity, for a sampled dataset, such as for example photon counts or flux
 density stored in the pixel value within an image. Often for optical astronomical images the value would be phot.count;
 for fully flux calibrated data a value such as phot.flux.density (usually specified in Jy) would be used. Any valid UCD
@@ -862,7 +862,7 @@ should be represented in the NDCube DM which tackles sparse data sets.
 \subsection{Additional Columns}
 \label{bkm:Ref421295535}\label{bkm:Ref421297012}Service providers may include additional columns in the ivoa.ObsCore
 table to expose additional metadata. These columns must be described in the TAP\_SCHEMA.columns table and in the output
-from the VOSI-tables resource \cite{2011ivoa.spec.0531G}. Users may access these columns by examining the column
+from the VOSI-tables resource \citep{2011ivoa.spec.0531G}. Users may access these columns by examining the column
 metadata for individual services and then using them explicitly in queries or by selecting all columns in the query
 (e.g. ``select * from ivoa.ObsCore ...'' in an ADQL query).  In order to provide homogeneity in the keywords used as
 optional fields, we recommend where possible to use the items defined in the full data model (Appendix B) and flagged
@@ -871,7 +871,7 @@ ones. Queries built up using additional columns defined specifically for a given
 
 \section{Registering an ObsTAP Service}
 \label{bkm:Ref298341494}The standard identifier for this version of the ObsCore model now follows the IVOA Identifiers
-v2.0 specification \cite{2016ivoa.spec.0523D} and should be ivo://ivoa.net/std/ObsCore\#core-1.1
+v2.0 specification \citep{2016ivoa.spec.0523D} and should be ivo://ivoa.net/std/ObsCore\#core-1.1
 
 The ObsCore data model will be registered using this identifier in the StandardsRegExt (standards registry extension)
 definition.
@@ -880,7 +880,7 @@ TAP services that implement the ObsCore model should be registered to indicate t
 all services that accept ObsCore queries. This can be done in any registry by using the keyword ``ObsCore'' to describe
 the service. In addition, fine-grained registries may include the complete VODataService table set description.
 
-The TAPRegExt (Table Access Protocol registry extension) \cite{2012ivoa.spec.0827D}  provides a mechanism (the
+The TAPRegExt (Table Access Protocol registry extension) \citep{2012ivoa.spec.0827D}  provides a mechanism (the
 `dataModel' element) to list one or more data models that are supported by a TAP service. The data model support uses
 the ivo standard identifier (above). One or more `dataModel' elements may be included as child elements of the
 {}`capability' element describing the TAP service which is the `capability' element with the following attributes:
@@ -973,7 +973,7 @@ selected scientific parameters to be used to query for datasets of interest. The
 below.
 
 Please note that for most science cases, a full TAP implementation is required for them to work as well as STC regions
-support. \cite{2009ivoa.rept.1030R}
+support. \citep{2009ivoa.rept.1030R}
 
 Some of the use-cases listed by the committee require advanced functionalities like ``search by type'', ``query from an
 input list'', and have not been fully developed here.
@@ -1583,7 +1583,7 @@ Table X:  Data model summary (with addition of axes dimension and UCD for each a
 
 \subsection{Observation Information}
 This class is a place holder that gathers all metadata relative to an observed and distributed dataset. It points to
-existing classes of Spectrum DM and types from VODataService \cite{2010ivoa.spec.1202P} .
+existing classes of Spectrum DM and types from VODataService \citep{2010ivoa.spec.1202P} .
 
 \subsubsection{Data Product Type (dataproduct\_type)}
 The model defines a data product type attribute for the Observation Class.  It is the type of the observation product
@@ -1678,14 +1678,14 @@ collection name which is meaningful to astronomers.
 
 \subsubsection{Creation date (obs\_creation\_date)}
 The date when the dataset was created. This is a time stamp, adopting the VO format regularly used in protocols and
-defined in DALI \cite{2013ivoa.spec.1129D} section 3.1.2 , i.e a restriction of the ISO 8601 format without the Z tag ,
+defined in DALI \citep{2013ivoa.spec.1129D} section 3.1.2 , i.e a restriction of the ISO 8601 format without the Z tag ,
 as defined in FITS standard.(``YYYY-MM-DDThh:mm:ss'').
 
 \subsubsection{Creator name (obs\_creator\_name)}
 The name of the institution or entity which created the dataset.
 
 \subsubsection{Dataset  Creator Identifier (obs\_creator\_did)}
-IVOA dataset identifier given by its creator. See definition in the SpectrumDM specification \cite{2007ivoa.spec.1029M} 
+IVOA dataset identifier given by its creator. See definition in the SpectrumDM specification \citep{2007ivoa.spec.1029M} 
 
 \subsection{Curation metadata}
 The Curation class inherits from the Spectrum data model and VOResource concepts too.  The various attributes for
@@ -1696,7 +1696,7 @@ This is the identifier the publisher provides for this observation. It is genera
 identifier given by the creator of the dataset. (new reduction, new calibration, etc..).  The corresponding Utype
 mapped from the Spectrum DM is Curation.PublisherDID and relates to the same definition.
 
-This field contains the IVOA dataset identifier \cite{2007ivoa.spec.0314P} for the published data product. This value
+This field contains the IVOA dataset identifier \citep{2007ivoa.spec.0314P} for the published data product. This value
 must be unique within the namespace controlled by the dataset publisher (data center).  It will also be globally unique
 since each publisher has a unique registered publisher ID.  The same dataset may however have more than one publisher
 dataset identifier if it is published in more than one location (the creator DID, if defined for the given dataset,
@@ -1707,11 +1707,11 @@ The IVOA ID for the data provider as defined in the Spectrum DM.
 
 \subsubsection{Bibliographic Reference (bib\_reference)}
 URL or bibcode for documentation. This is a forward link to major publications which reference the dataset.  This is
-re-used from the SSA definition. See \cite{2012ivoa.spec.0210T}  in section 4.2.5.6 about Curation Metadata.
+re-used from the SSA definition. See \citep{2012ivoa.spec.0210T}  in section 4.2.5.6 about Curation Metadata.
 
 \subsubsection{Data Rights (data\_rights)}
 This parameter allows mentioning the availability of a dataset.  Possible values are: public, secure, or proprietary as
-stated in the VODataService recommendation\cite{2010ivoa.spec.1202P}. 
+stated in the VODataService recommendation\citep{2010ivoa.spec.1202P}. 
 
 \subsubsection{Release Date (obs\_release\_date)}
 This is a new attribute added to the original Curation class inherited from the Spectrum Data Model. 
@@ -1723,7 +1723,7 @@ NULL value in the releaseDate attribute is proprietary by definition.
 
 \subsection{Data Access}
 The data format as well as the URL to access the dataset is provided by the Access Class inherited from the SSA Utype
-list \cite{2012ivoa.spec.0210T}. Also included is an attribute for the estimated size of the data file. 
+list \citep{2012ivoa.spec.0210T}. Also included is an attribute for the estimated size of the data file. 
 
 \subsubsection{Access Reference (access\_url)}
 This item (Access.Reference) contains a URL that can be used to download the data product (as a file of some sort).
@@ -1749,7 +1749,7 @@ according to high volumes of data and transfer bit rate.
 As mentioned in the use-cases, selection criteria for an observation depend on the physical axes contained in the
 dataset especially the position, band, time, and the type of observed quantity that we call ``observable'' in the data
 model. The observable axis can cover various types of flux but also velocity, etc.  Such a description was tackled in
-the IVOA Characterisation data model \cite{2008ivoa.spec.0325L} from which we re-use mainly the first and second levels
+the IVOA Characterisation data model \citep{2008ivoa.spec.0325L} from which we re-use mainly the first and second levels
 of details except for the spatial coverage where the support region (level 3) is used too.  
 
 \subsubsection{Spatial axis}
@@ -1774,7 +1774,7 @@ sky, attached to a coordinate system definition.
 \item Coordinate system
 \end{itemize}
 The coordinate system defined in the Characterisation DM is based on the STC:Coordsys class.  The model in principle
-supports all kind of coordinate systems defined in the STC reference list \cite{2009ivoa.rept.1030R}. However, the ObsTAP
+supports all kind of coordinate systems defined in the STC reference list \citep{2009ivoa.rept.1030R}. However, the ObsTAP
 implementation of the model mandates that queries expressed in ICRS should be supported in an ObsTAP service. This
 allows a general query to be sent to multiple archives or data centers, but requires some interpretation /conversion of
 coordinates at the server side. Still this is efficient for the large data discovery strategy we need to provide.  Data
@@ -1793,7 +1793,7 @@ Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2
 whose short names in the ObsCore table are s\_ra and s\_dec. We assume that ObsTAP implements these coordinates in the
 ICRS system. 
 
-Using other coordinate systems as defined in STC \cite{2009ivoa.rept.1030R} and re-used in the Characterisation DM can be
+Using other coordinate systems as defined in STC \citep{2009ivoa.rept.1030R} and re-used in the Characterisation DM can be
 considered in client applications in charge of the coordinate translations.
 
 \paragraph{The covered region}
@@ -1866,7 +1866,7 @@ interpretation of this with respect to a reference position like velocity.
 
 The data model distinguishes the various flavors of this axis using the UCD attached to it, Char.SpectralAxis.ucd named
 as em\_ucd in ObsTAP optional fields.  Possible values for this UCD are defined in the Spectrum DM
-\cite{2011ivoa.spec.1120M} in section 4.1. 
+\citep{2011ivoa.spec.1120M} in section 4.1. 
 
 Depending on the UCD used to specify the axis, the ObsCore model allows to describe the spectral coordinates in a
 relevant unit, corresponding to the spectral quantity, and specified in the model in Char.SpectralAxis.unit (em\_unit)
@@ -1986,7 +1986,7 @@ Most observations measure some flux quantity depending on position, spectral coo
 more general axis: the ``observable axis'' that can be either flux or any other quantity, the nature of which is
 specified by the UCD attached to this axis.
 
-The possible UCD values are part of the UCD1+ vocabulary \cite{2007ivoa.spec.0402P} . One can find simple flux classes
+The possible UCD values are part of the UCD1+ vocabulary \citep{2007ivoa.spec.0402P} . One can find simple flux classes
 like: phot.flux, phot.flux.density, phot.count, phot.mag, or more complex combinations such as:
 phot.flux.density;phys.polarization.stokes
 
@@ -2003,7 +2003,7 @@ unit strings in the table mentioned above.
 This describes the calibration applied on the Flux observed (or other observable quantity).
 
 It is a string to be selected in \{absolute, relative, normalized, any\} as defined in the SSA specification 
-\cite{2012ivoa.spec.0210T} in section 4.1.2.10.
+\citep{2012ivoa.spec.0210T} in section 4.1.2.10.
 
 This list can be extended or updated for instance using an extension mechanism similar to the definition of new UCDs in
 the IVOA process, following the feedback from implementations of ObsTAP services. 
@@ -2026,7 +2026,7 @@ of the various polarization modes present in the dataset.
 
 In the Obs/TAP implementation the column name is pol\_states.It is a mandatory field with NULL value allowed if no
 polarization applies. Otherwise it contains a list of polarization labels inspired from the FITS specification. See
-Table 7 in FITS WCS Paper 1 \cite{2002A&A...395.1061G} . Labels are combined using symbols from the \{I Q U V RR LL RL LR
+Table 7 in FITS WCS Paper 1 \citep{2002A&A...395.1061G} . Labels are combined using symbols from the \{I Q U V RR LL RL LR
 XX YY XY YX POLI POLA\} set and separated by a / character. A leading / character must start the list and a trailing /
 character must end it. It should be ordered following the above list, compatible with the FITS list table for
 polarization definition.
@@ -2043,7 +2043,7 @@ SELECT * WHERE pol\_states LIKE '\%/Y/\%'
 
 selects only datasets containing Y polarization state.
 
-See A. Richards 's IVOA Note \cite{IVOANote:Polarisation} for the context of polarization data . 
+See A. Richards 's IVOA Note \citep{IVOANote:Polarisation} for the context of polarization data . 
 
 \subsubsection{Number of polarization elements (pol\_xel)}
 pol\_xel specifies the number of different polarization states present in the data. Its Utype in the Obscore DM is
@@ -2082,7 +2082,7 @@ observation.  Instrumental parameters are gathered here.
 \subsubsection{Facility (facility\_name)}
 The Facility class codes information about the observatory or facility used to collect the data. In this model we define
 one attribute of Utype Provenance.ObsConfig.facility.name which re-uses the Facility concept defined in the
-VODataService specification \cite{2010ivoa.spec.1202P}. 
+VODataService specification \citep{2010ivoa.spec.1202P}. 
 
  For combined observations stemming from multiple facilities the name may contain a list of comma separated strings, or
 the word {\textquotedbl}Many{\textquotedbl}; if the list is too long, as defined in the VODataservice specification. 
@@ -2156,7 +2156,7 @@ For Utypes created from the UML ObsCore model, we apply these rules:
 \item For classes referencing one other class, we use the name of the reference or role, and not the one of the pointed
 class. 
 \end{itemize}
-The meaning of the various columns corresponds to the definitions of the TAP IVOA standard \cite{CITATIONTAPl1036}. See
+The meaning of the various columns corresponds to the definitions of the TAP IVOA standard \citep{CITATIONTAPl1036}. See
 section 2.6.3 for the description of columns attributes.
 
 As a reminder, the last three columns are implementation oriented: 
