@@ -646,7 +646,7 @@ access URL.
 data model field is important both for data discovery and for the client to evaluate whether it will be able to
 actually use the data product if downloaded.
 
-MIME types are often used to specify file formats in existing protocols such as HTTP\cite{CITATIONIntl1036}.  However
+MIME types are often used to specify file formats in existing protocols such as HTTP \cite{std:MIME_types}.  However
 when dealing with astronomical observations as in ObsTAP services, more information about the format of the data is
 required than can be specified by conventional MIME types.  For instance we might want to distinguish between various
 formats like multi-extension FITS (e.g. for CCD mosaic instruments or MUSE IFU data), or ASDM (e.g. for ALMA or other
@@ -707,7 +707,7 @@ including custom binary file formats.
 
 Observational datasets consisting of multiple instrument-specific files may be exposed in formats like
 application/x-directory, application/x-tar or application/x-tar-gzip.  Details of the package content and how to access
-inner data products are described in the IVOA Data Link specification\cite{2015ivoa.spec.0617D}. See the example
+inner data products are described in the IVOA Data Link specification \cite{2015ivoa.spec.0617D}. See the example
 presented in section \ref{bkm:Ref303703299} .
 
 Compression is inherent in some file formats, e.g., ZIP or JPEG.  In other formats it is optional and is indicated by
@@ -2026,7 +2026,7 @@ of the various polarization modes present in the dataset.
 
 In the Obs/TAP implementation the column name is pol\_states.It is a mandatory field with NULL value allowed if no
 polarization applies. Otherwise it contains a list of polarization labels inspired from the FITS specification. See
-Table 7 in FITS WCS Paper 1 \cite{CITATIONGrel1036} . Labels are combined using symbols from the \{I Q U V RR LL RL LR
+Table 7 in FITS WCS Paper 1 \cite{2002A&A...395.1061G} . Labels are combined using symbols from the \{I Q U V RR LL RL LR
 XX YY XY YX POLI POLA\} set and separated by a / character. A leading / character must start the list and a trailing /
 character must end it. It should be ordered following the above list, compatible with the FITS list table for
 polarization definition.
@@ -2043,7 +2043,7 @@ SELECT * WHERE pol\_states LIKE '\%/Y/\%'
 
 selects only datasets containing Y polarization state.
 
-See A. Richards IVOA Note for the context of polarization data\cite{CITATIONRic10l1036}. 
+See A. Richards 's IVOA Note \cite{IVOANote:Polarisation} for the context of polarization data . 
 
 \subsubsection{Number of polarization elements (pol\_xel)}
 pol\_xel specifies the number of different polarization states present in the data. Its Utype in the Obscore DM is
@@ -2082,7 +2082,7 @@ observation.  Instrumental parameters are gathered here.
 \subsubsection{Facility (facility\_name)}
 The Facility class codes information about the observatory or facility used to collect the data. In this model we define
 one attribute of Utype Provenance.ObsConfig.facility.name which re-uses the Facility concept defined in the
-VODataService specification\cite{CITATIONVodatal1036}. 
+VODataService specification \cite{2010ivoa.spec.1202P}. 
 
  For combined observations stemming from multiple facilities the name may contain a list of comma separated strings, or
 the word {\textquotedbl}Many{\textquotedbl}; if the list is too long, as defined in the VODataservice specification. 
