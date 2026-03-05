@@ -32,10 +32,12 @@
 \usepackage{lscape}
 \usepackage{float}
 \usepackage{listings}
+\usepackage{ltablex}
+\usepackage{seqsplit}
 
 
 \begin{document}
-%setup listing printing parameters 
+%setup listing printing parameters
 %\lstset{ %
 %  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
 %  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
@@ -81,7 +83,7 @@ reference to more complete data models such as Characterisation DM, Spectrum DM 
 (SSLDM).
 
 ObsCore shares a large set of common concepts with DataSet Metadata Data Model \citep{wd:DatasetDM} which binds
-together most of the data model concepts from the above models in a comprehensive and more general frame work. 
+together most of the data model concepts from the above models in a comprehensive and more general frame work.
 
 This current specification on the contrary provides guidelines for implementing these concepts using the TAP protocol
 and answering ADQL queries. It is dedicated to global discovery.
@@ -91,7 +93,7 @@ and answering ADQL queries. It is dedicated to global discovery.
 \section*{Acknowledgments}
 
 We acknowledge support from the Astronomy ESFRI and Research Infrastructure Cluster -- ASTERICS project, funded by the
-European Commission under the Horizon 2020 Programme (GA 653477) and former Euro-VO ICE and CoSADiE European projects. 
+European Commission under the Horizon 2020 Programme (GA 653477) and former Euro-VO ICE and CoSADiE European projects.
 SSC XMM Catalog service supported the implementation of the SAADA version of ObsTAP at Strasbourg Observatory as well
 as the TapHandle application. The US-VAO project contributed to developing this specification and prototyping the use
 of ObsTAP in the VAO portal.  The CANFAR project also contributed for the reference implementation of ObsTAP at CADC,
@@ -121,7 +123,7 @@ retrieving or otherwise accessing selected data products thus discovered.  The a
 query to multiple archives simultaneously is a fundamental use case for the Virtual Observatory.  Providing a simple
 standard protocol such as the one described in this document increases the chances that a majority of the data
 providers in astronomy will be able to implement the protocol, thus allowing data discovery for almost all archived
-astronomical observations. 
+astronomical observations.
 
 Version 1.0 and Version 1.1 of ObsCore are focused on public data. However optional fields like obs\_release\_date and
 data\_rights are proposed to also support proprietary data.
@@ -141,14 +143,14 @@ corrects a few errors in the description of data model items found in version 1.
 
 Consistency with the IVOA NDCube data model which represents N-Dimensional datasets has been improved. Therefore the
 main data model component of ObsCore DM, which focuses on a data product, is renamed ``ObsDataset'' as in `NDCube' and
-`IVOA DataSet Metadata' models, instead of `Observation' as named previously. 
+`IVOA DataSet Metadata' models, instead of `Observation' as named previously.
 
 This data model does not expose the mapping of data axes to physical coordinate systems, as available for instance in
 FITS WCS keywords. Such information belong to the scope of the `NDCube' and `STCv2' data models and will be used in
 future versions of DAL protocols.
 
 In the following are described the fundamental building blocks which are used to achieve the goal of global data
-discoverability and accessibility. 
+discoverability and accessibility.
 
 \subsection{First building block: Data Models}
 Modeling of observational metadata has been an important activity of the IVOA since its creation in 2002.  This modeling
@@ -184,12 +186,12 @@ subset of the general observational data model.
 Specifically, this effort aims at defining a database table to describe astronomical datasets (data products) stored in
 archives that can be queried directly with the TAP protocol.  This is ideal for global data discovery as any type of
 data can be described in a straightforward and uniform fashion.  The described datasets can be directly downloaded or
-accessed via IVOA Data Access Layer (DAL) protocols. 
+accessed via IVOA Data Access Layer (DAL) protocols.
 
 The final capability required to support uniform global data discovery and access, with a client sending one and the
 same query to multiple TAP services, is the stipulation that a uniform standard data model is exposed (through TAP)
 using agreed naming conventions, formats, units, and reference systems.  Defining this core data model and associated
-query mechanism is what this document is for.  
+query mechanism is what this document is for.
 
 Thus the purpose of this document is twofold: (1) to define a simple data model to describe observational data, and (2)
 to define a standard way to expose it through the TAP protocol to provide a uniform interface to discover observational
@@ -198,12 +200,12 @@ science data products of any type.
 This document is organized as follows:
 \begin{itemize}
 \item Section \ref{sec:use-cases} briefly presents the types of the use cases collected from the astronomical
-community by the IVOA Uptake committee. 
+community by the IVOA Uptake committee.
 \item Section \ref{sec:core-components} defines the core components of the Observation data model. The elements of the data
 model are summarized in Figure \ref{fig:obsdataset}. Mandatory ObsTAP fields are summarized in Table 1.
 \item Section \ref{sec:obstap-impl} specifies the required data model fields as they are used in the TAP service: table
-names, column names, column data type, UCD, Utype from the Observation Core components data model, and required units. 
-\item Section \ref{sec:obstap-register} describes how to register an ObsTAP service in a Virtual Observatory registry. 
+names, column names, column data type, UCD, Utype from the Observation Core components data model, and required units.
+\item Section \ref{sec:obstap-register} describes how to register an ObsTAP service in a Virtual Observatory registry.
 More detailed information is available in the appendices.
 \item Examples are cited in Appendix A
 \item Section 6 summarizes updates of this document.
@@ -222,7 +224,7 @@ attributes that they can easily map to their database system in order to support
 The goal is to be simple enough to be practical to implement, without attempting to exhaustively describe every
 particular dataset.
 
-The main features of these use-cases are as follows: 
+The main features of these use-cases are as follows:
 
 \begin{itemize}
 \item Support multi-wavelength as well as positional and temporal searches.
@@ -289,7 +291,7 @@ purposes here we show Characterisation classes only down to the level of the Sup
 \caption{ObsDataset metadata}
 \label{fig:obsdataset}
 \end{figure}
-Figure \ref{fig:obsdataset} depicts the classes used to organize observational metadata. Classes may be linked either via 
+Figure \ref{fig:obsdataset} depicts the classes used to organize observational metadata. Classes may be linked either via
 association or aggregation.  The minimal set of necessary attributes for data discovery is shown in brown.
 
 For the sake of clarity, the SpatialAxis, SpectralAxis and TimeAxis classes on the diagram are not expanded on the main
@@ -337,18 +339,18 @@ The ObsCore data model is the result of the analysis of the data discovery use c
 of elements have been identified: those necessary to support the provided use cases, and others that are generally
 useful to describe the data but are not immediately required to support the use cases.  In this section only the first
 set is described.  That set coincides with the set of parameters that any ObsTAP service must support. Please refer to
-appendix B for the detailed description of all model elements. 
+appendix B for the detailed description of all model elements.
 
 Table 1 lists the data model elements that any ObsTAP implementation must support (i.e. a column with such name must
 exist, though, in some cases, it could be nillable).  Provision of these mandatory fields ensures that any query based
 on these parameters is guaranteed to be understood by all ObsTAP services.
 
 NB: Data model fields are listed here with their TAP column name rather than the IVOA data model element identifiers
-(Utype) to ease readability.  See the associated Utypes in Appendix C. 
+(Utype) to ease readability.  See the associated Utypes in Appendix C.
 
 %\begin{table}[h]
 %\begin{center}
-\begin{longtable}{|l|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.35\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.25\textwidth}|p{0.12\textwidth}|p{0.1\textwidth}|p{0.39\textwidth}|}
 \hline
 Column Name & Unit & Type & Description\\\hline
 dataproduct\_type & unitless & String & Logical data product type (image etc.)\\\hline
@@ -381,7 +383,7 @@ pol\_states & unitless & String & List of polarization states or NULL if not app
 pol\_xel & unitless & integer & Number of polarization samples \\\hline
 facility\_name & unitless & String & Name of the facility used for this observation \\\hline
 instrument\_name & unitless & String & Name of the instrument used for this observation \\\hline
-\end{longtable}
+\end{tabularx}
 %\end{center}
 \label{bkm:Ref460858868}Table T1.  Mandatory fields of the Observation Core Components data
 model with their name, recommended units, data type and designation.
@@ -436,7 +438,7 @@ of data product types is not allowed, i.e., either one of the above values or NU
 
 Further information on the specific content of a data product can be provided by the dataproduct\_subtype data model
 field defined in the data model appendix \ref{bkm:Ref291536287} , and by the related obs\_title
-(\ref{bkm:Ref292046860}) and access\_format attributes (section \ref{bkm:Ref289893457}). 
+(\ref{bkm:Ref292046860}) and access\_format attributes (section \ref{bkm:Ref289893457}).
 
 The intent of dataproduct\_type is to provide only a general indication of the category to which the data product
 belongs to facilitate global data discovery.
@@ -447,7 +449,7 @@ much data reduction/processing has been applied to the data.  It is up to the da
 their own internal classification to the suggested classification scale here.
 
 Level 0:  Raw instrumental data, in a proprietary or internal data-provider defined format, that needs instrument
-specific tools to be handled. 
+specific tools to be handled.
 
 Level 1:  Instrumental data in a standard format (FITS, VOTable, SDFITS, ASDM, etc.) which could be manipulated with
 standard astronomical packages.
@@ -457,17 +459,17 @@ Level 2: Calibrated, science ready data with the instrument signature removed.
 Level 3: Enhanced data products like mosaics, resampled or drizzled images, or heavily processed survey fields.  Level 3
 data products may represent the combination of data from multiple primary observations.
 
-Level 4: Analysis data products generated after some scientific data manipulation or interpretation. 
+Level 4: Analysis data products generated after some scientific data manipulation or interpretation.
 
 The examples in the following subsection should help illustrate use of the calib\_level attribute. It is left to the
 data provider to decide for ambiguous cases.
 
 \paragraph[Examples of datasets and their calibration level]{Examples of datasets and their calibration level}
-Here are examples of various datasets, classified according to scheme defined above. 
+Here are examples of various datasets, classified according to scheme defined above.
 
 %\begin{table}[h]
 %\begin{center}
-\begin{tabular}{|l|p{0.2\textwidth}|p{0.2\textwidth}|p{0.2\textwidth}|p{0.35\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.18\textwidth}|p{0.26\textwidth}|p{0.15\textwidth}|p{0.28\textwidth}|}
 \hline
 Data product type & Data collection & Calibration Level & Comments\\\hline
 image & IRAS/NASA & 2 & Science ready data\\\hline
@@ -480,22 +482,22 @@ event & ROSAT/HEASARC & 1 & Instrumental data\\\hline
 visibility & ALMA, Merlin, etc. & 1 & Instrumental data\\\hline
 measurements & ESO tile catalog  & 4 & Photometric catalog of extracted sources for a tile image\\\hline
 timeseries & CTA reconstructed light curve  & 4 & Reconstructed light curve following photons vs particles separation under some assumption \\\hline
-\end{tabular}
-%\end{center}
+\end{tabularx}
 \label{T2}Table T2. Examples of datasets with their associated calibration level values.
+%\end{center}
 %\end{table}
 
 \subsubsection{Observation and Observation Dataset}
 \label{bkm:Ref450327253}ObsTAP describes observations in a broad sense; exactly what comprises an
 {\textquotedbl}observation{\textquotedbl} is not well defined within astronomy and is left up to the data provider to
-define for their data.  ObsTAP also describes archive data products (e.g., actual archive files). 
+define for their data.  ObsTAP also describes archive data products (e.g., actual archive files).
 
-The IVOA Dataset Metadata model (see http://www.ivoa.net/documents/DatasetDM/) clarifies the logical links between an
+The IVOA Dataset Metadata model\footnote{see \url{http://www.ivoa.net/documents/DatasetDM/}} clarifies the logical links between an
 Observation and an ObservationDataset i.e a data product here. It makes a distinction between an
 {\textquotedbl}observation{\textquotedbl} as the description of an observing experiment and its resulting datasets.
 Therefore the term ObsDataset is adopted in this version as a replacement of Observation in the previous ObsCore1.0
 specification. It helps to handle various situations of combination, stacking, packaging of the results of performing
-an observation at the instrument level. 
+an observation at the instrument level.
 
 In general an Observation Dataset, as a result, may be composed of multiple individual data products.  In this case all
 the data products stemming from one observation should share the same observation identifier (obs\_id).  The form of
@@ -538,7 +540,7 @@ are many such examples; we give only a few here to illustrate the concept.
 
 Specifying the content and format of a data product is important as special software may be required to do anything
 useful with the data.  The user needs to know exactly what the data product is before deciding to download it for
-analysis. 
+analysis.
 
 See section \ref{bkm:Ref289893457} for more details and implementation requirements.
 
@@ -558,18 +560,18 @@ straightforward.
 
 %\begin{table}[h]
 %\begin{center}
-\begin{tabular}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.6\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.2\textwidth}|p{0.2\textwidth}|p{0.4\textwidth}|}
 \hline
 schema\_name & table\_name & Description\\\hline
-ivoa & ivoa.ObsCore & ObsCore 1.1\\\hline 
-\end{tabular}
-%\end{center}
+ivoa & ivoa.ObsCore & ObsCore 1.1\\\hline
+\end{tabularx}
 \label{T3}Table T3. TAP\_SCHEMA.tables for implementation of the ObsCore model.
+%\end{center}
 %\end{table}
 
 %\begin{table}[h]
 %\begin{center}
-\begin{longtable}{|p{0.20\textwidth}|p{0.28\textwidth}|p{0.22\textwidth}|p{0.1\textwidth}|p{0.20\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.18\textwidth}|p{0.25\textwidth}|p{0.22\textwidth}|p{0.07\textwidth}|p{0.14\textwidth}|}
 \hline
 table\_name & column\_name & data type & units & Constraint\\\hline
 ivoa.ObsCore & dataproduct\_type & adql:VARCHAR &  & \\\hline
@@ -602,40 +604,41 @@ ivoa.ObsCore & pol\_states  & adql:VARCHAR & & \\\hline
 ivoa.ObsCore & pol\_xel & adql:BIGINT & & \\\hline
 ivoa.ObsCore & facility\_name & adql:VARCHAR & & \\\hline
 ivoa.ObsCore & instrument\_name & adql:VARCHAR & & \\\hline
-\end{longtable}
+\end{tabularx}
 %\end{center}
 \label{tab:4}Table T4. List of the minimal set of data model fields to
-implement for an ObsTAP service. See tables of Appendix C for the full description of the TAP\_SCHEMA.columns table. 
+implement for an ObsTAP service. See tables of Appendix C for the full description of the TAP\_SCHEMA.columns table.
 %\end{table}
+\vspace{0.3cm}
 
 Table 3 and Table 4 provide the primary information needed to describe the ObsCore model in terms of TAP\_SCHEMA tables
-and columns. 
+and columns.
 
 The ``datatype'' column values should follow the TAP standard specification and are bound to the TAP specification
-version used to implement the model. Here what is shown applies for TAP v1.0. 
+version used to implement the model. Here what is shown applies for TAP v1.0.
 
 The content of the ``constraint'' column specified in Table 4 above is not part of the TAP\_SCHEMA.columns description,
 but is required by the ObsCore model and specified here to make this clear to implementers.  Additional standard
-content for the individual columns is specified below. 
+content for the individual columns is specified below.
 
 \subsection{Data Product Type (dataproduct\_type)}
 The dataproduct\_type column contains a simple string value describing the primary nature of the data product.  It
-should assume one of these string values: image, cube, spectrum, sed, timeseries, visibility, event or measurements. 
+should assume one of these string values: image, cube, spectrum, sed, timeseries, visibility, event or measurements.
 These values are described in section \ref{bkm:Ref286875933}.  A NULL value is permitted, but only in the event that
 none of the proposed values can be used to describe the dataset.  The optional field dataproduct\_subtype
 (\ref{bkm:Ref291536287}) may be used to more precisely define the nature of the dataset.  Values in the
 dataproduct\_type column must be written in lower case. Specifying this field along with the desired spatial and
-spectral coverage will be enough to discover data of interest in many common cases. 
+spectral coverage will be enough to discover data of interest in many common cases.
 
 Usage: select * from ivoa.ObsCore where dataproduct\_type='image' returns only image data.
 
 \subsection{ Caveat while using dataproduct\_type=``measurements''}
 Note that ``measurements'' extends the set of accepted values for dataproduct\_type in ObsCore 1.0. This extension is
-meant to expose derived data products together with the progenitor observation dataset. 
+meant to expose derived data products together with the progenitor observation dataset.
 
 A few mandatory keywords for the axes description may be non-applicable for such a data product. In this case the
 coverage on spatial, energy, time, and polarization may inherit the values from the ObsCore description of its
-progenitor. 
+progenitor.
 
 Progenitors and their derived data products must have the same obs\_id.
 
@@ -654,15 +657,15 @@ logical collection of datasets which are alike in some fashion.  Typical data co
 particular telescope, instrument, or survey. The value is either the registered shortname for the data collection, the
 full registered IVOA identifier for the collection, or a data provider defined shortname for the collection.  Often the
 collection name will be set to the name of the instrument that generated the data.  In that case we suggest specifying
-the collection name as a string composed of the facility name, followed by a slash, followed by the instrument name. 
+the collection name as a string composed of the facility name, followed by a slash, followed by the instrument name.
 
-Examples : HST/WFPC2, VLT/FORS2, CHANDRA/ACIS-S. 
+Examples : HST/WFPC2, VLT/FORS2, CHANDRA/ACIS-S.
 
 There are other cases where it makes no sense to use the instrument name, may be because the data product used data from
 different instruments or facilities, or for other reasons.  Examples: SDSS-DR7, etc.
 
 In practice this is not a very precisely defined field.  What is important is for the data provider to use a collection
-name which is familiar to astronomers and discriminative to point easily on datasets of interest.  
+name which is familiar to astronomers and discriminative to point easily on datasets of interest.
 
 Values in the obs\_collection column must not be NULL.
 
@@ -734,9 +737,9 @@ using ObsTAP to describe actual data archives.
 
 %\begin{table}[h]
 %\begin{center}
-\begin{tabular}{|p{0.3\textwidth}|p{0.15\textwidth}|p{0.5\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.26\textwidth}|p{0.14\textwidth}|p{0.49\textwidth}|}
 \hline
-MIME-type & Shortname & Definition\\\hline 
+MIME-type & Shortname & Definition\\\hline
 image/fits   & fits & Any multidimensional regularly sampled FITS image or cube\\\hline
 image/jpeg   & jpeg & A 2D JPEG graphic image (likewise for GIF, PNG, etc.)\\\hline
 application/fits & fits & Any generic FITS file\\\hline
@@ -759,10 +762,12 @@ image/x-fits-gzip & fits & A GZIP-compressed FITS image\\\hline
 image/x-fits-hcompress & fits & A FITS image using HCOMPRESS compression\\\hline
 application/x-tar-gzip & gtar & A GZIP-compressed TAR file (x-gtar also sometimes used)\\\hline
 application/x-votable+xml; content=datalink & datalink & A datalink response containing links to  data sets or services attached to the current dataset\\\hline
-\end{tabular}
+\end{tabularx}
 %\end{center}
 \label{tab:5}Table T5: TODO: label from orig doc
 %\end{table}
+\vspace{0.3cm}
+
 The value of access\_format should be a MIME type, either a standard MIME type, an extended MIME type from the above
 table, or a new custom MIME type defined by the data provider.  The short names suggested here are not used directly by
 access\_format.
@@ -781,7 +786,7 @@ having multiple versions of the format, e.g. image/fits or image/x-fits-gzip for
 {\textquotedbl}x-{\textquotedbl} prefix is required for anything which is not a registered standard MIME type).
 
 The access\_url field may also point to a datalink service. This is stipulated by the
-`application/x-votable+xml;content=datalink' access format. 
+`application/x-votable+xml;content=datalink' access format.
 
 This service will return a response containing attached files related to the discovered dataset (previews, tar
 ball{\dots}).  It can also contain descriptions of services running operations on the dataset like cut-outs..
@@ -789,7 +794,7 @@ ball{\dots}).  It can also contain descriptions of services running operations o
 \subsection{Estimated Download Size (access\_estsize)}
 The access\_estsize column contains the approximate size (in kilobytes) of the file available via the access\_url.  This
 is used only to gain some idea of the size of a data product before downloading it, hence only an approximate value is
-required.  Provision of dataset size estimates is important whenever it is possible that datasets can be very large. 
+required.  Provision of dataset size estimates is important whenever it is possible that datasets can be very large.
 
 \subsection{Target Name (target\_name)}
 The target\_name column contains the name of the target of the observation, if any.  This is typically the name of an
@@ -816,7 +821,7 @@ s\_region attribute (\ref{bkm:Ref158024378}).
 
 \subsection{Spatial Coverage (s\_region)}
 \label{bkm:Ref158024378}The s\_region column can be used to precisely specify the covered spatial region of a data
-product. 
+product.
 
 It is often an exact, or almost exact, representation of the illumination region of a given observation defined in a
 standard way by the concept of Support in the Characterisation data model.
@@ -826,11 +831,11 @@ limited number of ways. If implemented in TAP 1.0, and  included in the select l
 an STC-S string as described in \citep{2010ivoa.spec.0327D} [section 6]. In the WHERE clause, the s\_region column can be
 used with the ADQL geometry functions (INTERSECTS, CONTAINS) to specify conditions; the service will generally have to
 translate these into native SQL that enforces the same conditions or a suitable approximation. Implementers may
-approximate the spatial query conditions by translating the INTERSECTS and CONTAINS function calls in the query. 
+approximate the spatial query conditions by translating the INTERSECTS and CONTAINS function calls in the query.
 
 Because ObsTAP relies on ADQL queries and builds up on TAP, the mapping between the ObsCore model data types, as shown
 in Table 1.  Mandatory fields of the Observation Core Components data model with their name, recommended units, data
-type and designation.should be adjusted to the definitions stated in the TAP version used for the ObsTAP service. 
+type and designation.should be adjusted to the definitions stated in the TAP version used for the ObsTAP service.
 
 Region computations are an advanced query capability which may not be supported by all services.  Services should
 however specify s\_region when possible to more precisely specify the spatial coverage of an observation.
@@ -860,7 +865,7 @@ sensitivity (depth) within a single data collection (e.g. obs\_collection); data
 relative value when it is not feasible to define or compute the true exposure time.
 
 In case of targeted observations, on the contrary the exposure time is often adjusted to achieve similar signal to noise
-ratio for different targets. 
+ratio for different targets.
 
 \subsection{Time Resolution (t\_resolution)}
 The t\_resolution column is the minimal interpretable interval between two points along the time axis.  This can be an
@@ -869,7 +874,7 @@ the exposure time or could be null.  If set to exposure time, one could compose 
 t\_resolution {\textless} t\_exptime  to find those products which are time resolved.
 
 This implementation preference avoids dealing with undefined data model fields as originally considered in the
-Characterisation data model for unresolved time axis so NULL value is preferred to not defined. 
+Characterisation data model for unresolved time axis so NULL value is preferred to not defined.
 
 \subsection{Spectral Bounds (em\_min, em\_max)}
 \label{bkm:Ref285651639}The em\_min column specifies the minimum spectral value observed, expressed as a vacuum
@@ -886,12 +891,12 @@ the server side, for a data provider to expose its data from other regimes to Ob
 
 \subsection{Spectral Resolving Power (em\_res\_power)}
 The em\_res\_power column contains the typical or characteristic spectral resolving power defined as
-${\lambda}/{\delta}{\lambda}$.  The value is dimensionless. 
+${\lambda}/{\delta}{\lambda}$.  The value is dimensionless.
 
 \subsection{Polarization states (pol\_states)}
-Polarisation states can also be described as a simple list of values if the dataset contains polarization data. 
+Polarisation states can also be described as a simple list of values if the dataset contains polarization data.
 
-See section  \ref{bkm:Ref482802717} for details.  
+See section  \ref{bkm:Ref482802717} for details.
 
 \subsection{Observable Axis Description (o\_ucd)}
 The o\_ucd column specifies a UCD \citep{2007ivoa.spec.0402P} describing the nature of the observable within the data
@@ -909,15 +914,15 @@ The lengths of each data axis (spatial, spectral, time, polarization) defined as
 these axes are included in this specification for ObsCore v1.1. This data model element was already defined as an
 attribute of the CharacterisationAxis Class in the Characterisation Data model. This provides quantitative information
 on the geometry of the data portion along the axes defined in the Characterisation Data Model. Various use-cases in
-Appendix A, section A.6 illustrate these discovery scenarios.  
+Appendix A, section A.6 illustrate these discovery scenarios.
 
 \begin{itemize}
-\item s\_xel1, s\_xel2  specify the number of values spanned  along the spatial dimensions  
-\item em\_xel, t\_xel specify the number of values spanned for the spectral and time axis respectively. 
+\item s\_xel1, s\_xel2  specify the number of values spanned  along the spatial dimensions
+\item em\_xel, t\_xel specify the number of values spanned for the spectral and time axis respectively.
 \item pol\_xel specifies the number of polarization states present in the dataset
 \end{itemize}
 This information helps to plan data selection, data slicing or sub setting following data discovery and will be used for
-building up extracted subsets on the fly. 
+building up extracted subsets on the fly.
 
 For pixelated data this concept clearly represents the number of samples along each axis.
 
@@ -953,7 +958,7 @@ the ivo standard identifier (above). One or more `dataModel' elements may be inc
 
 standardID={\textquotedbl}ivo://ivoa.net/std/TAP{\textquotedbl}(or later version)
 
-xmlns:tr={\textquotedbl}http://www.ivoa.net/xml/TAPRegExt/v1.0{\textquotedbl} (or later version) 
+xmlns:tr={\textquotedbl}http://www.ivoa.net/xml/TAPRegExt/v1.0{\textquotedbl} (or later version)
 
 xsi:type={\textquotedbl}tr:TableAccess{\textquotedbl}
 
@@ -984,17 +989,17 @@ Updated UCD column for obs\_publisher\_did and publisher\_id to meta.ref.ivoid
 Version REC 2017 May 09: (after final and careful read from A. Micol)
 
 \begin{itemize}
-\item corrected erroneous section number 7 into 6, 
+\item corrected erroneous section number 7 into 6,
 \item corrected  datamodel identifier in section 5,
 \item corrected ucd meta.ref.url in obs\_publisher\_did and publisher\_id  as meta.ref.uri instead of url,
 \item reword t\_resolution paragraph in section .
 \end{itemize}
 
-Version PR 1.1 2017: Mar 05 2017: table 4 in Appendix B: definition of pol\_states and definition of o\_calib\_status 
+Version PR 1.1 2017: Mar 05 2017: table 4 in Appendix B: definition of pol\_states and definition of o\_calib\_status
 
-Version PR 1.1 Oct04: typos and corrections of xml document example in App. C section 3 
+Version PR 1.1 Oct04: typos and corrections of xml document example in App. C section 3
 
-Version PR 1.1 March 2016 to PR1.1 September 2016: 
+Version PR 1.1 March 2016 to PR1.1 September 2016:
 
 \begin{itemize}
 \item In TAP\_SCHEMA~ table 3 changed datatype for access\_estsize to adql:BIGINT instead of adql:INTEGER and for
@@ -1005,11 +1010,11 @@ specification
 extraction/interpretation.
 \item Extend allowed values for calib\_level up to 4, to represent data products obtained as results of deep analysis
 processing.
-\item Cleanup for expressing Use-cases in Appendix A 
-\item IVOA IDs in TAPRegExt updated to comply to IVOA identifiers version 2.0 
+\item Cleanup for expressing Use-cases in Appendix A
+\item IVOA IDs in TAPRegExt updated to comply to IVOA identifiers version 2.0
 \item Typo corrections from reviewers `comments listed on the RFC page
-\item TAPRegExt section 5 rewrite 
-\item Use case appendix A: reformulate request for service capabilities 
+\item TAPRegExt section 5 rewrite
+\item Use case appendix A: reformulate request for service capabilities
 \end{itemize}
 Version 1.0 to 1.1 March 2016:
 
@@ -1017,7 +1022,7 @@ Version 1.0 to 1.1 March 2016:
 \item Homogenize case in Utypes strings
 \item Improve ucd tags for s\_region now labeled with pos.outline;obs.field instead of phys.area;obsfield
 \item Include axes dimensions (number of elements along one axis) expressed as s\_xel, em\_xel, t\_xel, etc , as an
-extrapolation of the definition for pi\_xel, vo\_xel , etc. 
+extrapolation of the definition for pi\_xel, vo\_xel , etc.
 \item Insert field s\_pixel\_scale that was missing in Appendix B Table 5 and App.C Table 7.
 \item Homogenize root class name: Obs(ervation) changed to ObsDataset according to Dataset Metadata data model and Cube
 DM
@@ -1045,7 +1050,7 @@ support. \citep{2009ivoa.rept.1030R}
 Some of the use-cases listed by the committee require advanced functionalities like ``search by type'', ``query from an
 input list'', and have not been fully developed here.
 
-Typical use-cases are described below. 
+Typical use-cases are described below.
 
 A wider set of working examples (beta release), is available at http://saada.unistra.fr/voexamples/show/ObsCore a DALI
 compliant example service developed by Laurent Michel, Mireille Louys and Daniel Durand (May 2016, in progress).
@@ -1061,7 +1066,7 @@ Show me a list of all data that satisfies:
 These data would be searched on all VO services by sending the following query:
 
 \begin{lstlisting}[language=SQL , flexiblecolumns=true]
-SELECT * FROM ivoa.Obscore 
+SELECT * FROM ivoa.Obscore
 WHERE CONTAINS(POINT('ICRS',16.0,40.0),s_region)=1
 \end{lstlisting}
 
@@ -1087,12 +1092,12 @@ Show me a list of all data that satisfies:
 Such a query needs to compute RA in degrees, extract information from Filter and adjust spectral intervals for search.
 
 \begin{lstlisting}[language=SQL,flexiblecolumns=true]
-SELECT * FROM ivoa.Obscore 
-WHERE dataproduct_type='image' AND s_resolution < 0.3 
-AND s_ra > 240 AND s_ra < 255 
-AND s_dec > 10 AND s_dec < 11 
-AND (em_min > 2.1e-06 AND em_max < 2.4e-06) 
-  OR (em_min >= 1.6e-06 AND em_max >= 1.8e-06) 
+SELECT * FROM ivoa.Obscore
+WHERE dataproduct_type='image' AND s_resolution < 0.3
+AND s_ra > 240 AND s_ra < 255
+AND s_dec > 10 AND s_dec < 11
+AND (em_min > 2.1e-06 AND em_max < 2.4e-06)
+  OR (em_min >= 1.6e-06 AND em_max >= 1.8e-06)
   OR (em_min >= 1.2e-06 AND em_max <= 1.4e-06)
 \end{lstlisting}
 
@@ -1107,7 +1112,7 @@ TAP service is referenced):
 
 \subsection{Datasets selection based on self criteria}
 \subsubsection{Use case 1.1}
-Any dataset at specified values for energy, position and time duration 
+Any dataset at specified values for energy, position and time duration
 
 Show me all observations satisfying:
 
@@ -1139,10 +1144,10 @@ Let me input a list of RA and DEC coordinates and show me spatially coincident o
 This use case may need several steps to select images from X-RAY domain, select image and spectra on optical domain and
 compute the overlap.
 
-It requires two functionalities from the service: 
+It requires two functionalities from the service:
 
 \begin{itemize}
-\item searchByList, to query on lists of positions given as input 
+\item searchByList, to query on lists of positions given as input
 \item InstersectionSet, to compute the intersection between two response lists.
 \end{itemize}
 \subsubsection{Use case 1.3}
@@ -1177,7 +1182,7 @@ Show me all data that satisfies:
 \begin{enumerate}
 \item DataType=IFU
 \item DataQuality: Fully Calibrated
-\item ObjectClass='quasar' 
+\item ObjectClass='quasar'
 \item Redshift {\textgreater} 3
 \item Radio flux {\textgreater} 1 mJy
 \end{enumerate}
@@ -1190,12 +1195,12 @@ AND calib_level > 1
 AND CONTAINS(POINT('ICRS', quasar_ra, quasar_dec), s_region) = 1
 \end{lstlisting}
 
-Requires two functionalities from the service: catalog access and searchByList 
+Requires two functionalities from the service: catalog access and searchByList
 
 \subsubsection[Use case 1.6 ]{Use case 1.6}
 Image data from a list of observations at particular positions and around specified dates.
 
-For an input list of RA, DEC, Modified Julian Date (MJD), show me all data that satisfies 
+For an input list of RA, DEC, Modified Julian Date (MJD), show me all data that satisfies
 
 \begin{enumerate}
 \item DataType=imaging
@@ -1207,7 +1212,7 @@ WHERE dataproduct\_type='image'
 
 AND CONTAINS(POINT('ICRS',user\_ra,user\_dec), s\_region) = 1
 
-AND ABS((t\_max + t\_min)/2 -- user\_date ) {\textless} 1 
+AND ABS((t\_max + t\_min)/2 -- user\_date ) {\textless} 1
 
 \subsection{Discovering spectra data}
 \subsubsection{Use case 2.1}
@@ -1246,20 +1251,20 @@ High resolution spectral cubes around one position covering more than 100 square
 Show me a list of data with:
 
 \begin{enumerate}
-\item DataType=cube 
+\item DataType=cube
 \item RA,DEC includes value RA1,DEC1
 \item Field size {\textgreater} 100 square arcseconds
 \item DataSensitivity = deep
 \item Spectral resolution better than 5 angstroms FWHM
 \end{enumerate}
 \subsubsection{Use case 3.2}
-Velocity cubes with resolution better than 50km/s at a defined position  
+Velocity cubes with resolution better than 50km/s at a defined position
 
 Show me a list of all data that satisfies:
 
 \begin{enumerate}
 \item DataType=cube with 3 dimensions
-\item Axes includes Velocity\ \ \ \ 
+\item Axes includes Velocity\ \ \ \
 \item Axes includes RA
 \item Axes includes DEC
 \item Velocity Resolution better than 50 km/s
@@ -1285,7 +1290,7 @@ Show me a list of all data that satisfies:
 \item Data Quality: Fully Calibrated
 \end{enumerate}
 \subsubsection{Use case 3.4}
-Polarization cubes with sky area more than 100x100 pixels. 
+Polarization cubes with sky area more than 100x100 pixels.
 
 Show me a list of all data that satisfies:
 
@@ -1298,7 +1303,7 @@ Show me a list of all data that satisfies:
 \item Rest Frequency = 345.795990 GHz appears in band
 \end{enumerate}
 \subsubsection{Use case 3.5}
-High spectral resolution with Frequency range more than 500Mhz and sky area more than 100 square pixels 
+High spectral resolution with Frequency range more than 500Mhz and sky area more than 100 square pixels
 
 Show me a list of all data that satisfies:
 
@@ -1322,7 +1327,7 @@ Show me a list of all data that satisfies:
 \begin{enumerate}
 \item DataType=Cube with 3 dimensions
 \item Axes includes WAVE
-\item Axes includes more than 200 pixels along each spatial axis 
+\item Axes includes more than 200 pixels along each spatial axis
 \end{enumerate}
 \begin{enumerate}
 \item Spatial resolution better than 2 arcsec
@@ -1330,7 +1335,7 @@ Show me a list of all data that satisfies:
 \end{enumerate}
 \subsection[Discovering time series]{Discovering time series}
 \subsubsection[Use case 4.1]{Use case 4.1}
-Times series for a sky position, with date, length and exposure constraints  
+Times series for a sky position, with date, length and exposure constraints
 
 Show me a list of all data which satisfies:
 
@@ -1360,7 +1365,7 @@ Show me a list of all data which satisfies:
 \item Number of time slots {\textgreater} 50
 \end{enumerate}
 \subsubsection{Use case 4.3}
-Times series for tracking a particular event 
+Times series for tracking a particular event
 
 Show me a list of all data matching a particular event (gamma ray burst) in time interval and space:
 
@@ -1387,21 +1392,21 @@ Show me a list of all event lists observed for a particular phenomenon with cons
 \item Observation data before June 10, 2008
 \end{enumerate}
 \subsubsection{Use case 5.2}
-Matching images and event lists from different data collections 
+Matching images and event lists from different data collections
 
 Show me a list of all event lists observed in the XMM data collection within the region covered by a particular image of
 GALEX data collection.
 
 \begin{enumerate}
 \item DataType=event list
-\item Region contains polygon P1 extracted from the foot print of a GALEX image 
+\item Region contains polygon P1 extracted from the foot print of a GALEX image
 \item Data collection= XMM
 \item Instrument name=EPN
 \end{enumerate}
 \subsection[Discovering general data from collections counterparts]{Discovering general data from collections
 counterparts}
 \subsubsection{Use case 6.1}
-Optical Imaging around detected objects in M81 group with X-ray and radio image cut-outs 
+Optical Imaging around detected objects in M81 group with X-ray and radio image cut-outs
 
 Show me a list of all data that satisfies:
 
@@ -1414,7 +1419,7 @@ Show me a list of all data that satisfies:
 \item I also want Radio data cut-outs 5 arcmin on a side around detected galaxies
 \end{enumerate}
 \subsubsection{Use case 6.2}
-Imaging and spectroscopy around position P in SDSS and CFHTLS data collections 
+Imaging and spectroscopy around position P in SDSS and CFHTLS data collections
 
  Show me a list of all data that satisfies:
 
@@ -1425,21 +1430,21 @@ Imaging and spectroscopy around position P in SDSS and CFHTLS data collections
 \item SDSS images and spectra AND CFHTLS images and spectra
 \end{enumerate}
 \subsubsection{Use case 6.3}
-Imaging and Xray data for selected objects in Virgo cluster 
+Imaging and Xray data for selected objects in Virgo cluster
 
 In Virgo cluster show me imaging and X-ray data for all galaxies that are cluster members and have B {\textless} 21.
 
 Strategy: Build up list from catalogs extraction and then compose query as use-case A 1.2
 
 \subsubsection{Use case 6.4}
-Image, spectra and event list from same data collection around position P and day D 
+Image, spectra and event list from same data collection around position P and day D
 
 Give me images, spectra and event lists stemming from a common collection around my favorite object, within a range in
-time.  
+time.
 
 \subsection{Complex Use Cases}
 Here are complex scenarios illustrating some broader perspectives for VO dataset discovery. Such discovery strategies
-have been sketched for VO demos and training use-cases at VO schools sessions.  
+have been sketched for VO demos and training use-cases at VO schools sessions.
 
 \subsubsection{Use case 7.1}
 Given COSMOS (or other survey) X-Ray source catalog give me all the sources with photoZ {\textgreater} X, and spiral
@@ -1467,185 +1472,187 @@ Comment: Complex use-case, including templates and theory as well as catalogs.
 This section provides a full description of all data model elements including both mandatory and optional elements
 (specified by the value in the ``MAN'' column).  The full UType for all elements of the Observation Core Components
 data model includes an ``obscore:{}''prefix (defining the namespace for ObsCoreDM) which has been elided here for
-brevity. 
+brevity.
 
-\begin{longtable}{|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|
-  p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|}
+%\begin{landscape}
+\small
+\begin{tabularx}{\textwidth}{|p{0.26\textwidth}|p{0.28\textwidth}|p{0.09\textwidth}|p{0.08\textwidth}|p{0.25\textwidth}|p{0.05\textwidth}|}
 \hline
-\multicolumn{3}{l}{Column Name} & Utype & Unit & Type & Description & MAN\\\hline
-\multicolumn{8}{l}{\centering OBSERVATION INFORMATION (section B.1)}\\\hline
-\multicolumn{3}{l}{dataproduct\_type} & 
-  ObsDataset.dataProductType & unitless & enum string & Data product (file content) primary type  & YES\\\hline
-\multicolumn{3}{l}{dataproduct\_subtype} &
-  ObsDataset.dataProductSubtype & unitless & string & Data product specific type & NO\\\hline
-\multicolumn{3}{l}{calib\_level} & 
-ObsDataset.calibLevel & unitless & enum int & Calibration level of the observation: in \{0, 1, 2, 3, 4\}  & YES\\\hline
-\multicolumn{7}{c}{\centering TARGET INFORMATION (section B.2)} & \\\hline
-\multicolumn{3}{l}{target\_name} & 
+{Column Name} & Utype & Unit & Type & Description & MAN\\\hline
+\multicolumn{6}{|c|}{\centering OBSERVATION INFORMATION (section B.1)}\\\hline
+{dataproduct\_type} &
+  \seqsplit{ObsDataset.dataProductType} & unitless & enum string & Data product (file content) primary type  & YES\\\hline
+{dataproduct\_subtype} &
+  \seqsplit{ObsDataset.dataProductSubtype} & unitless & string & Data product specific type & NO\\\hline
+{calib\_level} &
+  \seqsplit{ObsDataset.calibLevel} & unitless & enum int & Calibration level of the observation: in \{0, 1, 2, 3, 4\}  & YES\\\hline
+\multicolumn{6}{|c|}{\centering TARGET INFORMATION (section B.2)}\\\hline
+{target\_name} &
   Target.name & unitless & string & Object of interest & YES\\\hline
-\multicolumn{3}{l}{target\_class} & 
+{target\_class} &
   Target.class &  unitless & string & Class of the Target object as in SSA & NO\\\hline
-\multicolumn{8}{c}{\centering DATA DESCRIPTION (section B.3)}\\\hline
-\multicolumn{3}{l}{obs\_id} & 
-  DataID.observationID & unitless & string & Internal  ID given by the ObsTAP service & YES\\\hline
-\multicolumn{3}{l}{obs\_title} &
+\multicolumn{6}{|c|}{\centering DATA DESCRIPTION (section B.3)}\\\hline
+{obs\_id} &
+  \seqsplit{DataID.observationID} & unitless & string & Internal  ID given by the ObsTAP service & YES\\\hline
+{obs\_title} &
   DataID.title & unitless & string & Brief description of dataset in free format & NO\\\hline
-\multicolumn{3}{l}{obs\_collection} &
+{obs\_collection} &
   DataID.collection & unitless & string & Name of the data collection  & YES\\\hline
-\multicolumn{3}{l}{obs\_creation\_date } &
+{obs\_creation\_date } &
   DataID.date & unitless & date & Date when the dataset was created & NO\\\hline
-\multicolumn{3}{l}{obs\_creator\_name } &
+{obs\_creator\_name } &
   DataID.creator & unitless & string & Name of the creator of the data & NO\\\hline
-\multicolumn{3}{l}{obs\_creator\_did } &
+{obs\_creator\_did } &
   DataID.creatorDID & unitless & string & IVOA dataset identifier given by the creator  & NO\\\hline
-\multicolumn{8}{c}{\centering CURATION INFORMATION (section B.4)}\\\hline
-\multicolumn{3}{l}{obs\_release\_date} &
+\multicolumn{6}{|c|}{\centering CURATION INFORMATION (section B.4)}\\\hline
+{obs\_release\_date} &
   Curation.releaseDate & unitless & date & Observation release date (ISO 8601) & NO\\\hline
-\multicolumn{3}{l}{obs\_publisher\_did } &
-  Curation.publisherDID & unitless & string & ID for the Dataset  given by the publisher. & YES\\\hline
-\multicolumn{3}{l}{publisher\_id } &
+{obs\_publisher\_did } &
+  \seqsplit{Curation.publisherDID} & unitless & string & ID for the Dataset  given by the publisher. & YES\\\hline
+{publisher\_id } &
   Curation.publisherID & unitless & string & IVOA-ID for the Publisher & NO\\\hline
-\multicolumn{3}{l}{bib\_reference } &
+{bib\_reference } &
   Curation.reference & unitless & string & Service bibliographic reference & NO\\\hline
-\multicolumn{3}{l}{data\_rights } &
-  Curation.rights & unitless & enum string  & Public/Secure/Proprietary/ & NO\\\hline
-\multicolumn{8}{c}{\centering ACCESS INFORMATION (section B.5)}\\\hline
-\multicolumn{3}{l}{access\_url } &
+{data\_rights } &
+  Curation.rights & unitless & enum string  & \seqsplit{Public/Secure/Proprietary} & NO\\\hline
+\multicolumn{6}{|c|}{\centering ACCESS INFORMATION (section B.5)}\\\hline
+{access\_url } &
   Access.reference & unitless & string & URL used to access dataset & YES\\\hline
-\multicolumn{3}{l}{access\_format } &
+{access\_format } &
   Access.format & unitless & string & Content format of the dataset  & YES\\\hline
-\multicolumn{3}{l}{access\_estsize } &
+{access\_estsize } &
   Access.size & Kbyte & Int & Estimated size of dataset: in kilobytes  & YES\\\hline
-\multicolumn{8}{c}{\centering SPATIAL CHARACTERISATION (section B6.1)}\\\hline
-\multicolumn{1}{l}{s\_ra } &
-\multicolumn{3}{l}{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1} &
+\multicolumn{6}{|c|}{\centering SPATIAL CHARACTERISATION (section B6.1)}\\\hline
+{s\_ra } &
+  \seqsplit{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1} &
   Deg & double & Central Spatial Position in ICRS Right ascension  & YES\\\hline
-\multicolumn{1}{l}{s\_dec } &
-\multicolumn{3}{l}{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2} &
+{s\_dec } &
+  \seqsplit{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2} &
   Deg & double & Central Spatial Position in ICRS Declination  & YES\\\hline
-\multicolumn{1}{l}{s\_fov } &
-\multicolumn{3}{l}{Char.SpatialAxis.Coverage.Bounds.Extent.diameter} &
+{s\_fov } &
+  \seqsplit{Char.SpatialAxis.Coverage.Bounds.Extent.diameter} &
   Deg & double & Estimated size of the covered region as the diameter of a containing circle & YES\\\hline
-\multicolumn{1}{l}{s\_region } &
-\multicolumn{3}{l}{Char.SpatialAxis.Coverage.Support.Area} &
+{s\_region } &
+  \seqsplit{Char.SpatialAxis.Coverage.Support.Area} &
   unitless & string & Sky region covered by the  data product (expressed in ICRS frame) & YES\\\hline
-\multicolumn{1}{l}{s\_resolution } &
-\multicolumn{3}{l}{Char.SpatialAxis.Resolution.refval.value} &
+{s\_resolution } &
+  \seqsplit{Char.SpatialAxis.Resolution.refval.value} &
   Arcsec & double & Spatial resolution of data as FWHM of PSF & YES\\\hline
-\multicolumn{1}{l}{s\_xel1 } &
-\multicolumn{3}{l}{Char.SpatialAxis.numBins1} &
+{s\_xel1 } &
+  \seqsplit{Char.SpatialAxis.numBins1} &
   Unitless & integer & Number of elements along the first coordinate of the spatial  axis & YES\\\hline
-\multicolumn{1}{l}{s\_xel2 } &
-\multicolumn{3}{l}{Char.SpatialAxis.numBins2} & 
+{s\_xel2 } &
+  \seqsplit{Char.SpatialAxis.numBins2} &
   Unitless & integer & Number of elements along the second coordinate of the spatial  axis & YES\\\hline
-\multicolumn{1}{l}{s\_ucd } &
-\multicolumn{3}{l}{Char.SpatialAxis.ucd} &
+{s\_ucd } &
+  {Char.SpatialAxis.ucd} &
   Unitless & string & UCD for the nature of the spatial axis (pos or u,v data) & NO\\\hline
-\multicolumn{1}{l}{s\_unit } &
-\multicolumn{3}{l}{Char.SpatialAxis.unit} &
+{s\_unit } &
+  {Char.SpatialAxis.unit} &
   Unitless & string & Unit used for spatial axis & NO\\\hline
-\multicolumn{1}{l}{s\_resolution\_min } &
-\multicolumn{3}{l}{Char.SpatialAxis.Resolution.Bounds.Limits.LoLimit} &
+{s\_resolution\_min } &
+  \seqsplit{Char.SpatialAxis.Resolution.Bounds.Limits.LoLimit} &
   Arcsec & double & Resolution min value on spatial axis (FHWM of PSF)  & NO\\\hline
-\multicolumn{1}{l}{s\_resolution\_max } &
-\multicolumn{3}{l}{Char.SpatialAxis .Resolution.Bounds. Limits.HiLimit} &
+{s\_resolution\_max } &
+  \seqsplit{Char.SpatialAxis.Resolution.Bounds.Limits.HiLimit} &
   Arcsec & double & Resolution max value on spatial axis & NO\\\hline
-\multicolumn{1}{l}{s\_calib\_status } &
-\multicolumn{3}{l}{Char.SpatialAxis.calibrationStatus} &
+{s\_calib\_status } &
+  \seqsplit{Char.SpatialAxis.calibrationStatus} &
   unitless & Enum string & Type of calibration along the spatial axis & NO\\\hline
-\multicolumn{1}{l}{s\_stat\_error } &
-\multicolumn{3}{l}{Char.SpatialAxis.Accuracy.StatError.Refval.value} &
+{s\_stat\_error } &
+  \seqsplit{Char.SpatialAxis.Accuracy.StatError.Refval.value} &
   Arcsec & double & Astrometric precision along  the spatial axis & NO\\\hline
-\multicolumn{1}{l}{s\_pixel\_scale} &
-\multicolumn{3}{l}{Char.SpatialAxis.Sampling.RefVal.SamplingPeriod} &
+{s\_pixel\_scale} &
+  \seqsplit{Char.SpatialAxis.Sampling.RefVal.SamplingPeriod} &
   Arcsec & double & Sampling period in world coordinate units along the spatial axis & NO\\\hline
-\multicolumn{8}{c}{\centering TIME CHARACTERISATION (section B6.3)}\\\hline
-\multicolumn{2}{l}{t\_xel } &
-\multicolumn{2}{l}{Char.TimeAxis.numBins} &
+\multicolumn{6}{|c|}{\centering TIME CHARACTERISATION (section B6.3)}\\\hline
+{t\_xel } &
+  \seqsplit{Char.TimeAxis.numBins} &
   unitless & integer & Number of elements along the time axis & YES\\\hline
-\multicolumn{2}{l}{t\_min } &
-\multicolumn{2}{l}{Char.TimeAxis.Coverage.Bounds.Limits.StartTime} &
+{t\_min } &
+  \seqsplit{Char.TimeAxis.Coverage.Bounds.Limits.StartTime} &
   D & double & Start time in MJD & YES\\\hline
-\multicolumn{2}{l}{t\_max } &
-\multicolumn{2}{l}{Char.TimeAxis.Coverage.Bounds.Limits.StopTime} &
+{t\_max } &
+  \seqsplit{Char.TimeAxis.Coverage.Bounds.Limits.StopTime} &
   D & double & Stop time  in MJD & YES\\\hline
-\multicolumn{2}{l}{t\_exptime } &
-\multicolumn{2}{l}{Char.TimeAxis.Coverage.Support.Extent} &
+{t\_exptime } &
+  \seqsplit{Char.TimeAxis.Coverage.Support.Extent} &
   S & double & Total exposure time & YES\\\hline
-\multicolumn{2}{l}{t\_resolution } &
-\multicolumn{2}{l}{Char.TimeAxis.Resolution.Refval.valueResolution.Refval.value} &
+{t\_resolution } &
+  \seqsplit{Char.TimeAxis.Resolution.Refval.valueResolution.Refval.value} &
   S & double & Temporal resolution FWHM & YES\\\hline
-\multicolumn{2}{l}{t\_calib\_status } &
-\multicolumn{2}{l}{Char.TimeAxis. calibrationStatus} &
+{t\_calib\_status } &
+  \seqsplit{Char.TimeAxis. calibrationStatus} &
   unitless & Enum string & Type of time coordinate calibration & NO\\\hline
-\multicolumn{2}{l}{t\_stat\_error } &
-\multicolumn{2}{l}{Char.TimeAxis.Accuracy.StatError.Refval.value} &
+{t\_stat\_error } &
+  \seqsplit{Char.TimeAxis.Accuracy.StatError.Refval.value} &
   S & double & Time coord statistical error & NO\\\hline
-\multicolumn{8}{c}{\centering SPECTRAL CHARACTERISATION (section B6.2)}\\\hline
-\multicolumn{2}{l}{em\_xel } &
-\multicolumn{2}{l}{Char.SpectralAxis. numBins} &
+\multicolumn{6}{|c|}{\centering SPECTRAL CHARACTERISATION (section B6.2)}\\\hline
+{em\_xel } &
+  \seqsplit{Char.SpectralAxis.numBins} &
   unitless & integer & Number of elements along the spectral axis & YES\\\hline
-\multicolumn{2}{l}{em\_ucd } &
-\multicolumn{2}{l}{Char.SpectralAxis.ucd} &
+{em\_ucd } &
+  \seqsplit{Char.SpectralAxis.ucd} &
   unitless & string & Nature of the spectral axis & NO\\\hline
-\multicolumn{2}{l}{em\_unit } &
-\multicolumn{2}{l}{Char.SpectralAxis.unit} &
+{em\_unit } &
+  \seqsplit{Char.SpectralAxis.unit} &
   unitless & string & Units along  the spectral axis & NO\\\hline
-\multicolumn{2}{l}{em\_calib\_status } &
-\multicolumn{2}{l}{Char.SpectralAxis. calibrationStatus} &
+{em\_calib\_status } &
+  \seqsplit{Char.SpectralAxis.calibrationStatus} &
   unitless & Enum string & Type of spectral coord calibration & NO\\\hline
-\multicolumn{2}{l}{em\_min } &
-\multicolumn{2}{l}{Char.SpectralAxis.Coverage.Bounds.Limits.LoLimit} &
+{em\_min } &
+  \seqsplit{Char.SpectralAxis.Coverage.Bounds.Limits.LoLimit} &
   M & double & start in spectral coordinates & YES\\\hline
-\multicolumn{2}{l}{em\_max } &
-\multicolumn{2}{l}{Char.SpectralAxis.Coverage.Bounds.Limits.HiLimit} &
+{em\_max } &
+  \seqsplit{Char.SpectralAxis.Coverage.Bounds.Limits.HiLimit} &
   M & double & stop in spectral coordinates & YES\\\hline
-\multicolumn{2}{l}{em\_res\_power } &
-\multicolumn{2}{l}{Char.SpectralAxis.Resolution.ResolPower.refVal} &
+{em\_res\_power } &
+  \seqsplit{Char.SpectralAxis.Resolution.ResolPower.refVal} &
   unitless & double & Value of the resolving power along the spectral axis. (R) & YES\\\hline
-\multicolumn{2}{l}{em\_res\_power\_min } &
-\multicolumn{2}{l}{Char.SpectralAxis.Resolution.ResolPower.LoLimit} &
+{em\_res\_power\_min } &
+  \seqsplit{Char.SpectralAxis.Resolution.ResolPower.LoLimit} &
   unitless & double & Resolving power  min value on spectral axis & NO\\\hline
-\multicolumn{2}{l}{em\_res\_power\_max } &
-\multicolumn{2}{l}{Char.SpectralAxis.Resolution.ResolPower.HiLimit} &
+{em\_res\_power\_max } &
+  \seqsplit{Char.SpectralAxis.Resolution.ResolPower.HiLimit} &
   unitless & double & Resolving power max value on spectral axis & NO\\\hline
-\multicolumn{2}{l}{em\_resolution } &
-\multicolumn{2}{l}{Char.SpectralAxis.Resolution.Refval.value} &
+{em\_resolution } &
+  \seqsplit{Char.SpectralAxis.Resolution.Refval.value} &
   M & double & Value of Resolution along the spectral axis & NO\\\hline
-\multicolumn{2}{l}{em\_stat\_error } &
-\multicolumn{2}{l}{Char.SpectralAxis.Accuracy.StatError.Refval.value} &
+{em\_stat\_error } &
+  \seqsplit{Char.SpectralAxis.Accuracy.StatError.Refval.value} &
   M & double & Spectral coord statistical error & NO\\\hline
-\multicolumn{8}{c}{\centering OBSERVABLE AXIS (section B6.4)}\\\hline
-\multicolumn{2}{l}{o\_ucd } &
-\multicolumn{2}{l}{Char.ObservableAxis.ucd} &
+\multicolumn{6}{|c|}{\centering OBSERVABLE AXIS (section B6.4)}\\\hline
+{o\_ucd } &
+  \seqsplit{Char.ObservableAxis.ucd} &
   unitless & String & Nature of the observable axis & YES\\\hline
-\multicolumn{2}{l}{o\_unit } &
-\multicolumn{2}{l}{Char.ObservableAxis.unit} &
+{o\_unit } &
+  \seqsplit{Char.ObservableAxis.unit} &
   unitless &  string & Units used for the observable values  & NO\\\hline
-\multicolumn{2}{l}{o\_calib\_status } &
-\multicolumn{2}{l}{Char.ObservableAxis.calibrationStatus} &
+{o\_calib\_status } &
+  \seqsplit{Char.ObservableAxis.calibrationStatus} &
   unitless & Enum string & Type of calibration for the observable coordinate  & NO\\\hline
-\multicolumn{2}{l}{o\_stat\_error } &
-\multicolumn{2}{l}{Char.ObservableAxis.Accuracy.StatError.Refval.value} &
+{o\_stat\_error } &
+  \seqsplit{Char.ObservableAxis.Accuracy.StatError.Refval.value} &
   units specified  by o\_unit & double & Statistical error on the Observable axis & NO\\\hline
-\multicolumn{8}{c}{\centering POLARIZATION CHARACTERISATION (section \ref{bkm:Ref482804077})}\\\hline
-\multicolumn{2}{l}{pol\_xel } &
-\multicolumn{2}{l}{Char.PolarizationAxis.numBins} &
+\multicolumn{6}{|c|}{\centering POLARIZATION CHARACTERISATION (section \ref{bkm:Ref482804077})}\\\hline
+{pol\_xel } &
+  \seqsplit{Char.PolarizationAxis.numBins} &
   unitless & integer & Number of elements along the polarization axis & YES\\\hline
-\multicolumn{2}{l}{pol\_states} &
-\multicolumn{2}{l}{Char.PolarizationAxis.stateList} &
+{pol\_states} &
+  \seqsplit{Char.PolarizationAxis.stateList} &
   unitless & Enum string & List of polarization states present in the data file  & YES\\\hline
-\multicolumn{8}{c}{\centering PROVENANCE (section \ref{bkm:Ref482804135})}\\\hline
-\multicolumn{2}{l}{facility\_name} &
-\multicolumn{2}{l}{Provenance.ObsConfig.Facility.name} &
+\multicolumn{6}{|c|}{\centering PROVENANCE (section \ref{bkm:Ref482804135})}\\\hline
+{facility\_name} &
+  \seqsplit{Provenance.ObsConfig.Facility.name} &
   unitless & string & The name of the facility, telescope space craft used for the observation  & YES\\\hline
-\multicolumn{2}{l}{instrument\_name} &
-\multicolumn{2}{l}{Provenance.ObsConfig.Instrument.name} &
+{instrument\_name} &
+  \seqsplit{Provenance.ObsConfig.Instrument.name} &
   unitless & string & The name of the instrument used for the observation  & YES\\\hline
-\multicolumn{2}{l}{proposal\_id } &
-\multicolumn{2}{l}{Provenance.Proposal.identifier} &
+{proposal\_id } &
+  \seqsplit{Provenance.Proposal.identifier} &
   unitless & string & Identifier of proposal to which observation belongs & NO\\\hline
-\end{longtable}
+\end{tabularx}
+%\end{landscape}
 Table X:  Data model summary (with addition of axes dimension and UCD for each axis)
 
 \subsection{Observation Information}
@@ -1677,10 +1684,10 @@ However, in the meantime, the vocabulary used can be discovered easily by a simp
 {\dots}'
 
 \subsubsection{Calibration level (calib\_level)}
-It is a convention we suggest to use to classify the different possible calibration status of an observed dataset. 
+It is a convention we suggest to use to classify the different possible calibration status of an observed dataset.
 These 4 categories allow distinguishing 4 levels of calibration and would be sufficient for 80\% of the data
 collections.  This will be up to the data provider to consider how to map his own internal classification to the
-suggested scale here.  
+suggested scale here.
 
 See section \ref{bkm:Ref158638048}
 
@@ -1699,7 +1706,7 @@ quite useful for moving target like planets.
 \paragraph{Class of the Target source/object (target\_class)}
 This field indicates the type of object that was pointed for this observation. It is a string with possible values
 defined in a special vocabulary set to be defined: list of object classes (or types) used by the SIMBAD database, NED
-or defined in another IVOA vocabulary. 
+or defined in another IVOA vocabulary.
 
 \subsection{Dataset Description}
 After acquisition and reduction an observation is uniquely identified by its creator and gets a creator dataset
@@ -1719,7 +1726,7 @@ The name of the institution or entity which created the dataset, in a simple str
 The obs\_id column contains a collection-specific identifier for an observation. In the case where multiple data
 products are available for an observation (e.g. with different calibration levels), the obs\_id value will be the same
 for each product of the observation. This is equivalent to the dataset name for many archives where dataset name could
-have many files associated with them. 
+have many files associated with them.
 
 \subsubsection{Dataset Text Description (obs\_title)}
 \label{bkm:Ref292046860}This data model field re-uses a field from the Spectrum Data model: DataID.Title. It should
@@ -1731,7 +1738,7 @@ individual data products as {\textquotedbl}HI cube{\textquotedbl}, {\textquotedb
 
 This is commonly used in analysis software to e.g. describe a dataset in a query response table, in a plot header, in
 the label of a displayed image, and so forth. This helps the user to check the validity and pertinence of a selected
-dataset for his/her personal goal. 
+dataset for his/her personal goal.
 
 \subsubsection{Collection name (obs\_collection)}
 The name of the collection (DataID.Collection) identifies the data collection to which the data product belongs.  A data
@@ -1752,7 +1759,7 @@ as defined in FITS standard.(``YYYY-MM-DDThh:mm:ss'').
 The name of the institution or entity which created the dataset.
 
 \subsubsection{Dataset  Creator Identifier (obs\_creator\_did)}
-IVOA dataset identifier given by its creator. See definition in the SpectrumDM specification \citep{2007ivoa.spec.1029M} 
+IVOA dataset identifier given by its creator. See definition in the SpectrumDM specification \citep{2007ivoa.spec.1029M}
 
 \subsection{Curation metadata}
 The Curation class inherits from the Spectrum data model and VOResource concepts too.  The various attributes for
@@ -1770,7 +1777,7 @@ dataset identifier if it is published in more than one location (the creator DID
 would be the same regardless of where the data is published).
 
 \subsubsection{Publisher Identifier (publisher\_id)}
-The IVOA ID for the data provider as defined in the Spectrum DM. 
+The IVOA ID for the data provider as defined in the Spectrum DM.
 
 \subsubsection{Bibliographic Reference (bib\_reference)}
 URL or bibcode for documentation. This is a forward link to major publications which reference the dataset.  This is
@@ -1778,10 +1785,10 @@ re-used from the SSA definition. See \citep{2012ivoa.spec.0210T}  in section 4.2
 
 \subsubsection{Data Rights (data\_rights)}
 This parameter allows mentioning the availability of a dataset.  Possible values are: public, secure, or proprietary as
-stated in the VODataService recommendation\citep{2010ivoa.spec.1202P}. 
+stated in the VODataService recommendation\citep{2010ivoa.spec.1202P}.
 
 \subsubsection{Release Date (obs\_release\_date)}
-This is a new attribute added to the original Curation class inherited from the Spectrum Data Model. 
+This is a new attribute added to the original Curation class inherited from the Spectrum Data Model.
 
 It specifies the date of public release for an observation or a data product. This time stamp is a convenient way to
 distinguish public and private observations and also tell users when a specific data product will become available. The
@@ -1790,7 +1797,7 @@ NULL value in the releaseDate attribute is proprietary by definition.
 
 \subsection{Data Access}
 The data format as well as the URL to access the dataset is provided by the Access Class inherited from the SSA Utype
-list \citep{2012ivoa.spec.0210T}. Also included is an attribute for the estimated size of the data file. 
+list \citep{2012ivoa.spec.0210T}. Also included is an attribute for the estimated size of the data file.
 
 \subsubsection{Access Reference (access\_url)}
 This item (Access.Reference) contains a URL that can be used to download the data product (as a file of some sort).
@@ -1807,17 +1814,17 @@ We are aware that many different domains and applications need to define data fo
 vocabulary based on implementation feedback given by data providers at different sites.
 
 \subsubsection{Estimated Size (access\_estsize)}
-The Access.Size field contains the approximate size (in kilobytes) of the file available via the corresponding url. 
+The Access.Size field contains the approximate size (in kilobytes) of the file available via the corresponding url.
 This is used only to gain some idea of the size of a data product before downloading it, hence only an approximate
 value is required. It is only a useful indication that can help to tune download functionalities in an application
-according to high volumes of data and transfer bit rate. 
+according to high volumes of data and transfer bit rate.
 
 \subsection{Description of physical axes: Characterisation classes}
 As mentioned in the use-cases, selection criteria for an observation depend on the physical axes contained in the
 dataset especially the position, band, time, and the type of observed quantity that we call ``observable'' in the data
 model. The observable axis can cover various types of flux but also velocity, etc.  Such a description was tackled in
 the IVOA Characterisation data model \citep{2008ivoa.spec.0325L} from which we re-use mainly the first and second levels
-of details except for the spatial coverage where the support region (level 3) is used too.  
+of details except for the spatial coverage where the support region (level 3) is used too.
 
 \subsubsection{Spatial axis}
 \paragraph[Spatial sampling: number of elements for each coordinate ]{Spatial sampling: number of elements for each
@@ -1835,7 +1842,7 @@ Char.SpatialAxis.numBins1 for the first coordinate, and Char.SpatialAxis.numBins
 
 \paragraph{The observation reference position: (s\_ra and s\_dec)}
 Two coordinates in position are used to identify a reference position (typically the center) of an observation in the
-sky, attached to a coordinate system definition. 
+sky, attached to a coordinate system definition.
 
 \begin{itemize}
 \item Coordinate system
@@ -1858,7 +1865,7 @@ Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1
 Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2
 
 whose short names in the ObsCore table are s\_ra and s\_dec. We assume that ObsTAP implements these coordinates in the
-ICRS system. 
+ICRS system.
 
 Using other coordinate systems as defined in STC \citep{2009ivoa.rept.1030R} and re-used in the Characterisation DM can be
 considered in client applications in charge of the coordinate translations.
@@ -1882,7 +1889,7 @@ Char.SpatialAxis.Coverage.Bounds.Limits.LoLimit2Vec.C2
 Char.SpatialAxis.Coverage.Bounds.Limits.HiLimit2Vec.C2
 
 \begin{enumerate}
-\item The extent of the field of view (s\_fov) 
+\item The extent of the field of view (s\_fov)
 \end{enumerate}
 The model offers to estimate the size of the diameter of the greater circle encompassing the field of view.
 
@@ -1897,7 +1904,7 @@ in STC.  The Utypes:
 
 Char.SpatialAxis.Coverage.Support.Area Char.SpatialAxis.Coverage.Support.AreaType
 
-define this region. 
+define this region.
 
 Depending on the version of the TAP service used for distributing the data, this DM element will be mapped differently:
 see details in the TAP specifications, version 1.0 and above)
@@ -1910,10 +1917,10 @@ When this value is difficult to evaluate or inadequate, the range of possible re
 data model fields: s\_resolution\_min and s\_resolution\_max, as shown in Table 7.
 
 \paragraph{Astrometric Calibration Status: (s\_calib\_status)}
-A string to encode the calibration status along the spatial axis (astrometry). 
+A string to encode the calibration status along the spatial axis (astrometry).
 
 Possible values could be \{uncalibrated, raw, calibrated\} and correspond to the Utype
-Char.SpatialAxis.calibrationStatus 
+Char.SpatialAxis.calibrationStatus
 
 For some observations, only the pointing position is provided (s\_calib\_status =''uncalibrated''). Some other may have
 a raw linear relationship between the pixel coordinates and the world coordinates (s\_calib\_status =''raw'').
@@ -1933,18 +1940,18 @@ interpretation of this with respect to a reference position like velocity.
 
 The data model distinguishes the various flavors of this axis using the UCD attached to it, Char.SpectralAxis.ucd named
 as em\_ucd in ObsTAP optional fields.  Possible values for this UCD are defined in the Spectrum DM
-\citep{2011ivoa.spec.1120M} in section 4.1. 
+\citep{2011ivoa.spec.1120M} in section 4.1.
 
 Depending on the UCD used to specify the axis, the ObsCore model allows to describe the spectral coordinates in a
 relevant unit, corresponding to the spectral quantity, and specified in the model in Char.SpectralAxis.unit (em\_unit)
 
 Here is a short list of preferred value for the Observation data model Core Components extracted from the recommended
-values proposed in the Spectrum DM. 
+values proposed in the Spectrum DM.
 
 \begin{tabular}{|l|p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}|}
 \hline
 Spectral coordinate & Char.SpectralAxis.ucd & Char.SpectralAxis.unit\\\hline
-Frequency & em.freq & Hz\\\hline 
+Frequency & em.freq & Hz\\\hline
 Wavelength & em.wl & m or angstrom\\\hline
 Energy & em.energy & keV, J, erg\\\hline
 \end{tabular}
@@ -1954,7 +1961,7 @@ expressed in meters as mentioned in section \ref{bkm:Ref285651639}
 \paragraph[Number of spectral sampling elements (em\_xel)]{Number of spectral sampling elements (em\_xel)}
 Number of values spanned along the spectral axis, corresponding to Utype
 
-Char.SpectralAxis.numBins 
+Char.SpectralAxis.numBins
 
 \paragraph[Spectral calibration status (em\_calib\_status)]{Spectral calibration status (em\_calib\_status)}
 This attribute of the spectral axis indicates the status of the data in terms of spectral calibration. Possible values
@@ -1962,7 +1969,7 @@ are defined in the Characterisation Data Model and belong to \{uncalibrated , ca
 
 \paragraph{Spectral Bounds}
 \label{bkm:Ref419133828}These are the limits of the spectral interval covered by the observation, in short em\_min and
-em\_max. 
+em\_max.
 
 These limiting values are compatible with definitions of the physical quantity defined in the ucd and unit fields.
 
@@ -1988,7 +1995,7 @@ unit.\ \ Char.SpectralAxis.Resolution.ResolPower refval
 Resolving Power limits (em\_res\_power\_min, em\_res\_power\_max)
 
 These parameters simply give the limits of variation of the resolution power in the observation as minimal and maximal
-values and use the following Utypes: 
+values and use the following Utypes:
 
 Char.SpectralAxis.Resolution.ResolPower.LoLimit
 
@@ -1996,22 +2003,23 @@ Char.SpectralAxis.Resolution.ResolPower.HiLimit
 
 \paragraph{Accuracy along the spectral axis (em\_stat\_error)}
 This is also provided in the Characterisation data model, using the item mapped to the Utype:
-Char.SpectralAxis.Accuracy.StatError.Refval.value and, stored in the same units as all the other spectral quantities. 
+Char.SpectralAxis.Accuracy.StatError.Refval.value and, stored in the same units as all the other spectral quantities.
 
 \subsubsection{Doppler/Redshift datasets}
 Dataset including an axis representing Doppler velocity (e.g., a velocity cube) can be discovered using this
 specification. This can be indicated by specifying an appropriate value for the optional em\_ucd attribute, defining
 the type of velocity on the axis. The following UCD values are defined to represent velocities:
 
-\begin{tabular}{|l|p{0.3\textwidth}|p{0.6\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.3\textwidth}|p{0.5\textwidth}|}
 \hline
 Ucd & Definition\\\hline
 spect.dopplerVeloc.opt & Radial velocity derived from a wavelength shift using the optical convention\\\hline
 spect.dopplerVeloc.radio & Radial velocity derived from a frequency shift using the radio convention\\\hline
 spect.dopplerVeloc.rel & Radial velocity, derived using the relativistic convention\\\hline
 spect.doppler.z & Redshift derived from a spectral feature\\\hline
-\end{tabular}
-If em\_ucd contains one of these strings, then the discovered datasets can be any velocity or redshift data product. 
+\end{tabularx}
+
+If em\_ucd contains one of these strings, then the discovered datasets can be any velocity or redshift data product.
 However the spectral coverage of the dataset should still be specified in em\_min, em\_max as the vacuum wavelength in
 meters, as detailed in section \ref{bkm:Ref419133828}.
 
@@ -2022,7 +2030,7 @@ interval around one particular emission line.
 \subsubsection{Time axis}
 \paragraph[Time coverage (t\_min, t\_max, t\_exptime)]{Time coverage (t\_min, t\_max, t\_exptime)}
 Three time stamps are used: t\_min, t\_max, usually equals to start and stop time and t\_exptime the exposure time.
-These must be stored in MJD format, much preferable for easy calculations. Other information is given in subsection 
+These must be stored in MJD format, much preferable for easy calculations. Other information is given in subsection
 \ref{bkm:Ref285666427} and \ref{bkm:Ref285666434}.
 
 \paragraph{Time resolution (t\_resolution)}
@@ -2059,7 +2067,7 @@ phot.flux.density;phys.polarization.stokes
 
 Various possibilities have been gathered at the following URL:
 
-\url{http://www.ivoa.net/internal/IVOA/ObsTap/ListForObservable25Oct2010.pdf}  
+\url{http://www.ivoa.net/internal/IVOA/ObsTap/ListForObservable25Oct2010.pdf}
 
 which provides a (non-exhaustive) list of possible triplets (observable name, UCD, units) for various observables data
 providers may want to describe in their archive. The units used to encode values of the Observable quantity are
@@ -2069,11 +2077,11 @@ unit strings in the table mentioned above.
 \subsubsection{Calibration status on observable (Flux or other) (o\_calib\_status)}
 This describes the calibration applied on the Flux observed (or other observable quantity).
 
-It is a string to be selected in \{absolute, relative, normalized, any\} as defined in the SSA specification 
+It is a string to be selected in \{absolute, relative, normalized, any\} as defined in the SSA specification
 \citep{2012ivoa.spec.0210T} in section 4.1.2.10.
 
 This list can be extended or updated for instance using an extension mechanism similar to the definition of new UCDs in
-the IVOA process, following the feedback from implementations of ObsTAP services. 
+the IVOA process, following the feedback from implementations of ObsTAP services.
 
 \subsubsection{Polarization measurements (pol\_states, pol\_xel)}
 \label{bkm:Ref482804077}\label{bkm:Ref482802717}This covers the case when the observed flux was recorded for various
@@ -2089,7 +2097,7 @@ above.
 \subsubsection{List of polarization states (pol\_states)}
 In order to gather the polarization information, we define a polarization axis which is degenerated as compared to other
 axes, but describes necessary polarization properties of the dataset. Char.PolarizationAxis.stateList contains the list
-of the various polarization modes present in the dataset. 
+of the various polarization modes present in the dataset.
 
 In the Obs/TAP implementation the column name is pol\_states.It is a mandatory field with NULL value allowed if no
 polarization applies. Otherwise it contains a list of polarization labels inspired from the FITS specification. See
@@ -2100,23 +2108,23 @@ polarization definition.
 
 Then a query can be easily written like:
 
-SELECT * WHERE pol\_states LIKE '\%Y\%' 
+SELECT * WHERE pol\_states LIKE '\%Y\%'
 
-which brings back all polarization moments of type :Y XY YX YY 
+which brings back all polarization moments of type :Y XY YX YY
 
-On the contrary, 
+On the contrary,
 
-SELECT * WHERE pol\_states LIKE '\%/Y/\%' 
+SELECT * WHERE pol\_states LIKE '\%/Y/\%'
 
 selects only datasets containing Y polarization state.
 
-See A. Richards 's IVOA Note \citep{IVOANote:Polarisation} for the context of polarization data . 
+See A. Richards 's IVOA Note \citep{IVOANote:Polarisation} for the context of polarization data .
 
 \subsubsection{Number of polarization elements (pol\_xel)}
 pol\_xel specifies the number of different polarization states present in the data. Its Utype in the Obscore DM is
 Char.PolarizationAxis.numBins. The default value is 0, indicating that polarization was not explicitly observed.
 
-If an effective polarization measurement has been made, then pol\_xel should be specified as 1 or greater and 
+If an effective polarization measurement has been made, then pol\_xel should be specified as 1 or greater and
 pol\_states should contain the list of states recorded in the dataset.
 
 \subsubsection{Additional Parameters on Observable axis}
@@ -2126,12 +2134,12 @@ version of ObsCore.
 As an example, the type of noise present in an observation is not modeled. It depends on the instrument, on the data
 collection and can be defined in an optional column name in the IVOA.Obscore table like:
 
-\begin{tabular}{|l|p{0.2\textwidth}|p{0.2\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|
-  p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|}
+\scriptsize
+\begin{tabularx}{\textwidth}{|p{0.2\textwidth}|p{0.17\textwidth}|p{0.04\textwidth}|p{0.07\textwidth}|p{0.12\textwidth}|p{0.11\textwidth}|p{0.06\textwidth}|p{0.06\textwidth}|p{0.06\textwidth}|}
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD & Princ. & Index & Std\\\hline
-o\_stat\_error\_type   & adql:VARCHAR   & 20 & NULL & NULL & stat.error;meta.code & 1 & 0 & 0\\\hline
-\end{tabular}
+o\_stat\_error\_type   & adql:VARCHAR   & 20 & NULL & NULL & \seqsplit{stat.error;meta.code} & 1 & 0 & 0\\\hline
+\end{tabularx}
 
 Possible values of o\_stat\_error\_type could be: \{poisson, gauss, speckle\} and mentioned in the description of
 additional columns (See section \ref{bkm:Ref421297012} for more details)
@@ -2149,10 +2157,10 @@ observation.  Instrumental parameters are gathered here.
 \subsubsection{Facility (facility\_name)}
 The Facility class codes information about the observatory or facility used to collect the data. In this model we define
 one attribute of Utype Provenance.ObsConfig.facility.name which re-uses the Facility concept defined in the
-VODataService specification \citep{2010ivoa.spec.1202P}. 
+VODataService specification \citep{2010ivoa.spec.1202P}.
 
  For combined observations stemming from multiple facilities the name may contain a list of comma separated strings, or
-the word {\textquotedbl}Many{\textquotedbl}; if the list is too long, as defined in the VODataservice specification. 
+the word {\textquotedbl}Many{\textquotedbl}; if the list is too long, as defined in the VODataservice specification.
 
 The definition of a list of possible name values could be a task for the IVOA Semantic working group, starting from
 various facilities and instruments lists resources published in the community.
@@ -2160,7 +2168,7 @@ various facilities and instruments lists resources published in the community.
 \subsubsection{Instrument name (instrument\_name)}
 The name of the instrument used for the acquisition of the observation.  It is given in the model as
 Provenance.ObsConfig.instrument.name and encoded as a string. The possible name values could be checked in coordination
-with the Semantic WG too. Multiple values are also allowed for complex observations as defined for facility name. 
+with the Semantic WG too. Multiple values are also allowed for complex observations as defined for facility name.
 
 \subsubsection{Proposal (proposal\_id)}
 Each proposal has an identifier attribute that can be used to collect all observations and data products related to the
@@ -2171,7 +2179,7 @@ Provenance data model.]
 
 \section{TAP\_SCHEMA tables and usage}
 \subsection{Implementation Examples}
-There are various implementations of ObsCore in TAP, following the evolution of the TAP protocol and ADQL. 
+There are various implementations of ObsCore in TAP, following the evolution of the TAP protocol and ADQL.
 
 CADC and XMM have reference implementations for ObsCore 1.0 available via the VO application TapHandle 2.0
 (http://saada.unistra.fr/taphandle/) for instance.
@@ -2183,22 +2191,23 @@ Check the registry for ObsTAP services serving ObsCore v 1.1 metadata
 \subsection{ObsCore 1.0 first examples}
 \label{bkm:Ref303703299} Examples of the ObsTAP use-cases and ObsTAP Schema can be found at the following URL:
 
-http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/cvo/ObsCore/ 
+http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/cvo/ObsCore/
 
 \subsection{Implementing a package of multiple data products}
 This example shows how to describe a complex observation dataset, referenced by its obs\_id field and containing
 different data products, all packed together in an archive file.
 
-For example, for High Energy datasets we could have as the table response of an ObsTAP query: 
+For example, for High Energy datasets we could have as the table response of an ObsTAP query:
 
-\begin{tabular}{|l|p{0.1\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.1\textwidth}|p{0.2\textwidth}|p{0.35\textwidth}|}
+\begin{tabularx}{\textwidth}{|p{0.07\textwidth}|p{0.09\textwidth}|p{0.23\textwidth}|p{0.12\textwidth}|p{0.19\textwidth}|p{0.3\textwidth}|}
 \hline
 obs\_id & data product type & data product subtype   & Calibration Level   & Access Format   & Title\\\hline
  123   & event   & chandra.hrc.pkg   & 1 & application/x-tar-gzip   & Chandra ACS-XYZ observation package (event,refimage)\\\hline
 123   & image   & chandra.hrc.refimage   & 2 & image/fits   & ACS-XYZ reference image\\\hline
 123   & image   & chandra.hrc.preview   & 2 & image/jpeg   & Chandra ACS-XYZ preview image\\\hline
 345   & event   & rosat.foo.pkg   & 1 & application/x-tar-gzip & ROSAT observation package\\\hline
-\end{tabular}
+\end{tabularx}
+
 The subtype could in principle be more generic but will likely be instrument-specific for a level 1 data product.
 
 The Title should concisely describe the data product, e.g., origin, instrument, ID, what it is (observation package,
@@ -2208,7 +2217,7 @@ to identify to a human the data being shown. Its length is limited to one line o
 \subsection[List of data model fields in TAP\_SCHEMA]{List of data model fields in TAP\_SCHEMA}
 TAP Schema (TAP\_SCHEMA.columns) metadata for all mandatory and optional data model fields are given in the following
 tables.  We suggest using only lower case for all column names in the tables used to implement ObsTAP, in order to
-simplify queries against multiple database systems. 
+simplify queries against multiple database systems.
 
 Utypes strings are easier to read in `Camel case' that is why we recommend using these strings as written in the tables
 below, for all interactions with users and developers. These strings are produced and read in VOTable for instance and
@@ -2221,12 +2230,12 @@ For Utypes created from the UML ObsCore model, we apply these rules:
 \begin{itemize}
 \item Attributes of a class start with a lower case letter (e.g. calibrationStatus)
 \item For classes referencing one other class, we use the name of the reference or role, and not the one of the pointed
-class. 
+class.
 \end{itemize}
 The meaning of the various columns corresponds to the definitions of the TAP IVOA standard \citep{2010ivoa.spec.0327D}. See
 section 2.6.3 for the description of columns attributes.
 
-As a reminder, the last three columns are implementation oriented: 
+As a reminder, the last three columns are implementation oriented:
 
 {}`principal': means that this item is of main importance, and for instance is recommended in a select or should be
 shown in first priority in a query response.
@@ -2247,7 +2256,7 @@ are informative for TAP 1.0 only; later versions of TAP may specify different va
 %TITOTOTO
 \begin{sidewaystable}
 %\begin{longtable}[hbt]
-\begin{tabular}{|l|l|l|l|l|l|}% 6 left justified 
+\begin{tabular}{|l|l|l|l|l|l|}% 6 left justified
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
 dataproduct\_type &
@@ -2255,21 +2264,21 @@ adql:VARCHAR &
 TBD &
 NULL &
 ObsDataset.dataProductType &
-meta.code.class 
+meta.code.class
 \\\hline
 calib\_level &
 adql:INTEGER &
 NULL &
 NULL &
 ObsDataset.calibLevel &
-meta.code;obs.calib 
+meta.code;obs.calib
 \\\hline
 obs\_collection &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.collection &
-meta.id 
+meta.id
 \\\hline
 %comment
 obs\_id &
@@ -2277,84 +2286,84 @@ adql:VARCHAR &
 TBD &
 NULL &
 DataID.observationID &
-meta.id 
+meta.id
 \\\hline
 obs\_publisher\_did &
 adql:VARCHAR &
 TBD &
 NULL &
 Curation.publisherDID &
-meta.ref.ivoid 
+meta.ref.ivoid
 \\\hline
 access\_url &
 adql:CLOB &
 NULL &
 NULL &
 Access.reference &
-meta.ref.url 
+meta.ref.url
 \\\hline
 access\_format &
 adql:VARCHAR &
 NULL &
 NULL &
 Access.format &
-meta.code.mime 
+meta.code.mime
 \\\hline
 access\_estsize &
 adql:BIGINT &
 NULL &
 kbyte &
 Access.size &
-phys.size;meta.file 
+phys.size;meta.file
 \\\hline
 target\_name &
 adql:VARCHAR &
 TBD &
 NULL &
 Target.name &
-meta.id;src 
+meta.id;src
 \\\hline
 s\_ra &
 adql:DOUBLE &
 NULL &
 deg &
 Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1 &
-pos.eq.ra 
+pos.eq.ra
 \\\hline
 s\_dec &
 adql:DOUBLE &
 NULL &
 deg &
 Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2 &
-pos.eq.dec 
+pos.eq.dec
 \\\hline
 s\_fov &
 adql:DOUBLE &
 NULL &
 deg &
 Char.SpatialAxis.Coverage.Bounds.Extent.diameter &
-phys.angSize;instr.fov 
+phys.angSize;instr.fov
 \\\hline
 s\_region &
 adql:REGION &
 NULL &
  &
 Char.SpatialAxis.Coverage.Support.Area &
-pos.outline;obs.field 
+pos.outline;obs.field
 \\\hline
 s\_resolution &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Resolution.Refval.value &
-pos.angResolution 
+pos.angResolution
 \\\hline
 s\_xel1 &
 adql:BIGINT &
 NULL &
 NULL &
 Char.SpatialAxis.numBins1 &
-meta.number 
+meta.number
 \\\hline
 s\_xel2 &
 adql:BIGINT &
@@ -2364,14 +2373,14 @@ Char.SpatialAxis.numBins2 &
 meta.number
 \\\hline
 \end{tabular}
-\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.  
+\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.
 Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted in the table..}
 \label{table:tapschema-mandatory}
 \end{sidewaystable}
 
 \begin{sidewaystable}
 %\begin{longtable}[hbt]
-\begin{tabular}{|l|l|l|l|l|l|}% 9 left justified 
+\begin{tabular}{|l|l|l|l|l|l|}% 9 left justified
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
 t\_min &
@@ -2385,101 +2394,101 @@ adql:DOUBLE &
 NULL &
 d &
 Char.TimeAxis.Coverage.Bounds.Limits.StopTime &
-time.end;obs.exposure 
+time.end;obs.exposure
 \\\hline
 t\_exptime &
 adql:DOUBLE &
 NULL &
 s &
 Char.TimeAxis.Coverage.Support.Extent &
-time.duration;obs.exposure 
+time.duration;obs.exposure
 \\\hline
 t\_resolution &
 adql:DOUBLE &
 NULL &
 s &
 Char.TimeAxis.Resolution.Refval.value &
-time.resolution 
+time.resolution
 \\\hline
 t\_xel &
 adql: BIGINT &
 NULL &
 NULL &
 Char.TimeAxis.numBins &
-meta.number 
+meta.number
 \\\hline
 em\_min &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Coverage.Bounds.Limits.LoLimit &
-em.wl;stat.min 
+em.wl;stat.min
 \\\hline
 em\_max &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Coverage.Bounds.Limits.HiLimit &
-em.wl;stat.max 
+em.wl;stat.max
 \\\hline
 em\_res\_power &
 adql:DOUBLE &
 NULL &
 NULL &
 Char.SpectralAxis.Resolution.ResolPower.refVal &
-spect.resolution 
+spect.resolution
 \\\hline
 em\_xel &
 adql: BIGINT &
 NULL &
 NULL &
 Char.SpectralAxis.numBins &
-meta.number 
+meta.number
 \\\hline
 o\_ucd &
 adql:VARCHAR &
 TBD &
 NULL &
 Char.ObservableAxis.ucd &
-meta.ucd 
+meta.ucd
 \\\hline
 pol\_states &
 adql:VARCHAR &
 TBD &
 NULL &
 Char.PolarizationAxis.stateList &
-meta.code;phys.polarization 
+meta.code;phys.polarization
 \\\hline
 pol\_xel &
 adql: BIGINT &
 NULL &
 NULL &
 Char.PolarizationAxis.numBins &
-meta.number 
+meta.number
 \\\hline
 facility\_name &
 adql:VARCHAR &
 NULL &
 NULL &
 Provenance.ObsConfig.Facility.name &
-meta.id;instr.tel  
+meta.id;instr.tel
 \\\hline
 Instrument\_name &
 adql:VARCHAR &
 NULL  &
 NULL &
 Provenance.ObsConfig.Instrument.name &
-meta.id;instr 
+meta.id;instr
 \\\hline
 \end{tabular}
 \caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.  Part 2.}
 \label{table:tapschema-mandatory}
 \end{sidewaystable}
 
-% 
+%
  \newpage
 \begin{sidewaystable}
-\begin{tabular}{ | l | l | l | l | l | l | l | l}% 9 left justified 
+\begin{tabular}{ | l | l | l | l | l | l | l | l}% 9 left justified
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
 dataproduct\_subtype &
@@ -2487,210 +2496,210 @@ adql:VARCHAR &
 TBD &
 NULL &
 ObsDataset.dataProductSubtype &
-meta.code.class 
+meta.code.class
 \\\hline
 target\_class &
 adql:VARCHAR &
 TBD &
 NULL &
 Target.class &
-src.class 
+src.class
 \\\hline
 obs\_creation\_date &
 adql:TIMESTAMP &
 NULL &
 NULL &
 DataID.date &
-time;meta.dataset 
+time;meta.dataset
 \\\hline
 obs\_creator\_name   &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.creator &
-meta.id 
+meta.id
 \\\hline
 obs\_creator\_did &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.creatorDID &
-meta.id 
+meta.id
 \\\hline
 obs\_title &
 adql:VARCHAR &
 200 &
 NULL &
 DataID.title &
-meta.title;obs 
+meta.title;obs
 \\\hline
 publisher\_id   &
 adql:VARCHAR &
 TBD &
 NULL &
 Curation.publisherID &
-meta.ref.ivoid 
+meta.ref.ivoid
 \\\hline
 bib\_reference   &
 adql:VARCHAR &
 TBD &
 NULL &
 Curation.reference &
-meta.bib 
+meta.bib
 \\\hline
 data\_rights   &
 adql:VARCHAR &
 NULL &
  NULL &
 Curation.rights &
-meta.code 
+meta.code
 \\\hline
 obs\_release\_date &
 adql:TIMESTAMP &
 NULL &
 NULL &
 Curation.releaseDate &
-time.release 
+time.release
 \\\hline
 s\_ucd   &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpatialAxis.ucd &
-meta.ucd 
+meta.ucd
 \\\hline
 s\_unit   &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpatialAxis.unit &
-meta.unit 
+meta.unit
 \\\hline
 s\_resolution\_min &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Resolution.Bounds.Limits.LoLimit &
-pos.angResolution;stat.min 
+pos.angResolution;stat.min
 \\\hline
 s\_resolution\_max &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Resolution.Bounds.Limits.HiLimit &
-pos.angResolution;stat.max 
+pos.angResolution;stat.max
 \\\hline
 s\_pixel\_scale &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Sampling.RefVal.SamplingPeriod &
-phys.angSize;instr.pixel 
+phys.angSize;instr.pixel
 \\\hline
 s\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpatialAxis.calibrationStatus &
-meta.code.qual 
+meta.code.qual
 \\\hline
 s\_stat\_error &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Accuracy.StatError.Refval.value &
-stat.error;pos.eq 
+stat.error;pos.eq
 \\\hline
 t\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.TimeAxis.calibrationStatus &
-meta.code.qual 
+meta.code.qual
 \\\hline
 t\_stat\_error &
 adql:DOUBLE &
 NULL &
 s &
 Char.TimeAxis.Accuracy.StatError.Refval.value &
-stat.error;time 
+stat.error;time
 \\\hline
 em\_ucd &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpectralAxis.ucd &
-meta.ucd 
+meta.ucd
 \\\hline
 em\_unit &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpectralAxis.unit &
-meta.unit 
+meta.unit
 \\\hline
 em\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpectralAxis.calibrationStatus &
-meta.code.qual 
+meta.code.qual
 \\\hline
 em\_res\_power\_min &
 adql:DOUBLE &
 NULL &
 NULL  &
 Char.SpectralAxis.Resolution.ResolPower.LoLimit &
-spect.resolution;stat.min 
+spect.resolution;stat.min
 \\\hline
 em\_res\_power\_max &
 adql:DOUBLE &
 NULL &
 NULL &
 Char.SpectralAxis.Resolution.ResolPower.HiLimit &
-spect.resolution;stat.max 
+spect.resolution;stat.max
 \\\hline
 em\_resolution &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Resolution.Refval.value &
-spect.resolution;stat.mean 
+spect.resolution;stat.mean
 \\\hline
 em\_stat\_error &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Accuracy.StatError.Refval.value &
-stat.error;em 
+stat.error;em
 \\\hline
 o\_unit &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.ObservableAxis.unit &
-meta.unit 
+meta.unit
 \\\hline
 o\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.ObservableAxis.calibrationStatus &
-meta.code.qual 
+meta.code.qual
 \\\hline
 o\_stat\_error &
 adql:DOUBLE &
 NULL &
 o\_unit &
 Char.ObservableAxis.Accuracy.StatError.Refval.value &
-stat.error 
+stat.error
 \\\hline
 proposal\_id &
 adql:VARCHAR &
 NULL &
 NULL &
 Provenance.Proposal.identifier &
-meta.id; obs.proposal 
+meta.id; obs.proposal
 \\\hline
 \end{tabular}
 \caption{TAP.schema.columns values for the optional fields for an ObsTAP table.  All Utypes have the data model namespace prefix {\emph obscore:'} omitted in the table..}
@@ -2698,16 +2707,16 @@ meta.id; obs.proposal
 \end{sidewaystable}
 
 \section{Examples of ObsTAP query responses}
-Here is a Query Response VOTable document obtained by the CADC ObsTAP/TAP1.1 service at  
+Here is a Query Response VOTable document obtained by the CADC ObsTAP/TAP1.1 service at
 
 \url{http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/v2query?MAXREC=0}
 
 It contains all mandatory fields for ObsCore1.1. and the implementation details for the Datalink service attached to the
-TAP response. 
+TAP response.
 
-% ML : use listing environment instead 
+% ML : use listing environment instead
 
 %\begin{lstlisting} [language=XML, caption= Query Response]{VOtableResponseExemple.xml}
- 
+
 
 \end{document}
