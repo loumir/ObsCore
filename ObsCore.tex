@@ -28,9 +28,42 @@
 \previousversion[https://www.ivoa.net/documents/ObsCore/20111028/REC-ObsCore-v1.0-20111028.pdf]{REC-ObsCore-v1.0-20111028.pdf}
 
 \usepackage{longtable}
+\usepackage{rotating}
+\usepackage{lscape}
 \usepackage{float}
+\usepackage{listings}
+
 
 \begin{document}
+%setup listing printing parameters 
+%\lstset{ %
+%  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+%  basicstyle=\footnotesize\ttfamily,        % the size of the fonts that are used for the code
+%  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+%  breaklines=true,                 % sets automatic line breaking
+%  captionpos=b,                    % sets the caption-position to bottom
+%  commentstyle=\color{green},    % comment style
+%  deletekeywords={...},            % if you want to delete keywords from the given language
+%  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+%  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+%  frame=single,                    % adds a frame around the code
+%  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+%  keywordstyle=\color{blue},       % keyword style
+%  language=Python,                 % the language of the code
+%  otherkeywords={*,...},            % if you want to add more keywords to the set
+%  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+%  numbersep=5pt,                   % how far the line-numbers are from the code
+%  numberstyle=\tiny\color{gray}, % the style that is used for the line-numbers
+%  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+%  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+%  showstringspaces=false,          % underline spaces within strings only
+%  showtabs=false,                  % show tabs within strings adding particular underscores
+%  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+%  stringstyle=\color{mauve},     % string literal style
+%  tabsize=2,                       % sets default tabsize to 2 spaces
+%  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+%}
+
 \begin{abstract}
 This document defines the core components of the Observation data model that are necessary to perform data discovery
 when querying data centers for astronomical observations of interest.  It exposes use-cases to be carried out, explains
@@ -1027,7 +1060,7 @@ Show me a list of all data that satisfies:
 \end{enumerate}
 These data would be searched on all VO services by sending the following query:
 
-\begin{lstlisting}[language=SQL,flexiblecolumns=true]
+\begin{lstlisting}[language=SQL , flexiblecolumns=true]
 SELECT * FROM ivoa.Obscore 
 WHERE CONTAINS(POINT('ICRS',16.0,40.0),s_region)=1
 \end{lstlisting}
@@ -2211,931 +2244,470 @@ Table  6  TAP\_SCHEMA.columns values for the mandatory fields of an ObsTAP table
 namespace prefix {}``obscore:'' omitted in the table. The Datatype, Size, Principal, Index, and Std values shown here
 are informative for TAP 1.0 only; later versions of TAP may specify different values.
 
-\begin{tabular}{|l|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|
-  p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|}
+%TITOTOTO
+\begin{sidewaystable}
+%\begin{longtable}[hbt]
+\begin{tabular}{|l|l|l|l|l|l|}% 6 left justified 
 \hline
-Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD & Principal & Index & Std\\\hline
+Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
 dataproduct\_type &
 adql:VARCHAR &
 TBD &
 NULL &
 ObsDataset.dataProductType &
-meta.code.class &
-1 &
-TBD &
-1\\\hline
+meta.code.class 
+\\\hline
 calib\_level &
 adql:INTEGER &
 NULL &
 NULL &
 ObsDataset.calibLevel &
-meta.code;obs.calib &
-1 &
-TBD &
-1\\\hline
+meta.code;obs.calib 
+\\\hline
 obs\_collection &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.collection &
-meta.id &
-1 &
-TBD &
-1\\\hline
+meta.id 
+\\\hline
+%comment
 obs\_id &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.observationID &
-meta.id &
-1 &
-TBD &
-1\\\hline
+meta.id 
+\\\hline
 obs\_publisher\_did &
 adql:VARCHAR &
 TBD &
 NULL &
 Curation.publisherDID &
-meta.ref.ivoid &
-1 &
-TBD &
-1\\\hline
+meta.ref.ivoid 
+\\\hline
 access\_url &
 adql:CLOB &
 NULL &
 NULL &
 Access.reference &
-meta.ref.url &
-1 &
-0 &
-1\\\hline
+meta.ref.url 
+\\\hline
 access\_format &
 adql:VARCHAR &
 NULL &
 NULL &
 Access.format &
-meta.code.mime &
-1 &
-0 &
-1\\\hline
+meta.code.mime 
+\\\hline
 access\_estsize &
 adql:BIGINT &
 NULL &
 kbyte &
 Access.size &
-phys.size;meta.file &
-1 &
-0 &
-1\\\hline
+phys.size;meta.file 
+\\\hline
 target\_name &
 adql:VARCHAR &
 TBD &
 NULL &
 Target.name &
-meta.id;src &
-1 &
-0 &
-1\\\hline
+meta.id;src 
+\\\hline
 s\_ra &
 adql:DOUBLE &
 NULL &
 deg &
 Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1 &
-pos.eq.ra &
-1 &
-0 &
-1\\\hline
+pos.eq.ra 
+\\\hline
 s\_dec &
 adql:DOUBLE &
 NULL &
 deg &
 Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2 &
-pos.eq.dec &
-1 &
-0 &
-1\\\hline
+pos.eq.dec 
+\\\hline
 s\_fov &
 adql:DOUBLE &
 NULL &
 deg &
 Char.SpatialAxis.Coverage.Bounds.Extent.diameter &
-phys.angSize;instr.fov &
-1 &
-0 &
-1\\\hline
+phys.angSize;instr.fov 
+\\\hline
 s\_region &
 adql:REGION &
 NULL &
  &
 Char.SpatialAxis.Coverage.Support.Area &
-pos.outline;obs.field &
-1 &
-0 &
-1\\\hline
+pos.outline;obs.field 
+\\\hline
 s\_resolution &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Resolution.Refval.value &
-pos.angResolution &
-1 &
-TBD &
-1\\\hline
+pos.angResolution 
+\\\hline
 s\_xel1 &
 adql:BIGINT &
 NULL &
 NULL &
 Char.SpatialAxis.numBins1 &
-meta.number &
-1 &
-TBD &
-1\\\hline
+meta.number 
+\\\hline
 s\_xel2 &
 adql:BIGINT &
 NULL &
 NULL &
 Char.SpatialAxis.numBins2 &
-meta.number &
-1 &
-TBD &
-1\\\hline
+meta.number
+\\\hline
+\end{tabular}
+\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.  
+Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted in the table..}
+\label{table:tapschema-mandatory}
+\end{sidewaystable}
+
+\begin{sidewaystable}
+%\begin{longtable}[hbt]
+\begin{tabular}{|l|l|l|l|l|l|}% 9 left justified 
+\hline
+Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
 t\_min &
 adql:DOUBLE &
 NULL &
 d &
 Char.TimeAxis.Coverage.Bounds.Limits.StartTime &
-time.start;obs.exposure &
-1 &
-0 &
-1\\\hline
+time.start;obs.exposure \\\hline
 t\_max &
 adql:DOUBLE &
 NULL &
 d &
 Char.TimeAxis.Coverage.Bounds.Limits.StopTime &
-time.end;obs.exposure &
-1 &
-0 &
-1\\\hline
+time.end;obs.exposure 
+\\\hline
 t\_exptime &
 adql:DOUBLE &
 NULL &
 s &
 Char.TimeAxis.Coverage.Support.Extent &
-time.duration;obs.exposure &
-1 &
-TBD &
-1\\\hline
+time.duration;obs.exposure 
+\\\hline
 t\_resolution &
 adql:DOUBLE &
 NULL &
 s &
 Char.TimeAxis.Resolution.Refval.value &
-time.resolution &
-1 &
-0 &
-1\\\hline
+time.resolution 
+\\\hline
 t\_xel &
 adql: BIGINT &
 NULL &
 NULL &
 Char.TimeAxis.numBins &
-meta.number &
-1 &
-TBD &
-1\\\hline
+meta.number 
+\\\hline
 em\_min &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Coverage.Bounds.Limits.LoLimit &
-em.wl;stat.min &
-1 &
-0 &
-1\\\hline
+em.wl;stat.min 
+\\\hline
 em\_max &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Coverage.Bounds.Limits.HiLimit &
-em.wl;stat.max &
-1 &
-0 &
-1\\\hline
+em.wl;stat.max 
+\\\hline
 em\_res\_power &
 adql:DOUBLE &
 NULL &
 NULL &
 Char.SpectralAxis.Resolution.ResolPower.refVal &
-spect.resolution &
-1 &
-TBD &
-1\\\hline
+spect.resolution 
+\\\hline
 em\_xel &
 adql: BIGINT &
 NULL &
 NULL &
 Char.SpectralAxis.numBins &
-meta.number &
-1 &
-TBD &
-1\\\hline
+meta.number 
+\\\hline
 o\_ucd &
 adql:VARCHAR &
 TBD &
 NULL &
 Char.ObservableAxis.ucd &
-meta.ucd &
-1 &
-0 &
-1\\\hline
+meta.ucd 
+\\\hline
 pol\_states &
 adql:VARCHAR &
 TBD &
 NULL &
 Char.PolarizationAxis.stateList &
-meta.code;phys.polarization &
-1 &
-0 &
-1\\\hline
+meta.code;phys.polarization 
+\\\hline
 pol\_xel &
 adql: BIGINT &
 NULL &
 NULL &
 Char.PolarizationAxis.numBins &
-meta.number &
-1 &
-TBD &
-1\\\hline
+meta.number 
+\\\hline
 facility\_name &
 adql:VARCHAR &
 NULL &
 NULL &
 Provenance.ObsConfig.Facility.name &
-meta.id;instr.tel  &
-1 &
-TBD &
-1\\\hline
+meta.id;instr.tel  
+\\\hline
 Instrument\_name &
 adql:VARCHAR &
 NULL  &
 NULL &
 Provenance.ObsConfig.Instrument.name &
-meta.id;instr &
-1 &
-TBD &
-1\\\hline
+meta.id;instr 
+\\\hline
 \end{tabular}
+\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.  Part 2.}
+\label{table:tapschema-mandatory}
+\end{sidewaystable}
 
-\begin{tabular}{|l|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|
-  p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|p{0.1\textwidth}|}
+% 
+ \newpage
+\begin{sidewaystable}
+\begin{tabular}{ | l | l | l | l | l | l | l | l}% 9 left justified 
 \hline
-Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD & Principal & Index & Std\\\hline
+Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
 dataproduct\_subtype &
 adql:VARCHAR &
 TBD &
 NULL &
 ObsDataset.dataProductSubtype &
-meta.code.class &
-1 &
-TBD &
-1\\\hline
+meta.code.class 
+\\\hline
 target\_class &
 adql:VARCHAR &
 TBD &
 NULL &
 Target.class &
-src.class &
-1 &
-TBD &
-1\\\hline
+src.class 
+\\\hline
 obs\_creation\_date &
 adql:TIMESTAMP &
 NULL &
 NULL &
 DataID.date &
-time;meta.dataset &
-1 &
-TBD &
-1\\\hline
+time;meta.dataset 
+\\\hline
 obs\_creator\_name   &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.creator &
-meta.id &
-1 &
-TBD &
-1\\\hline
+meta.id 
+\\\hline
 obs\_creator\_did &
 adql:VARCHAR &
 TBD &
 NULL &
 DataID.creatorDID &
-meta.id &
-0 &
-TBD &
-1\\\hline
+meta.id 
+\\\hline
 obs\_title &
 adql:VARCHAR &
 200 &
 NULL &
 DataID.title &
-meta.title;obs &
-1 &
-0 &
-1\\\hline
+meta.title;obs 
+\\\hline
 publisher\_id   &
 adql:VARCHAR &
 TBD &
 NULL &
 Curation.publisherID &
-meta.ref.ivoid &
-1 &
-TBD &
-1\\\hline
+meta.ref.ivoid 
+\\\hline
 bib\_reference   &
 adql:VARCHAR &
 TBD &
 NULL &
 Curation.reference &
-meta.bib &
-0 &
-0 &
-1\\\hline
+meta.bib 
+\\\hline
 data\_rights   &
 adql:VARCHAR &
 NULL &
  NULL &
 Curation.rights &
-meta.code &
-0 &
-0 &
-1\\\hline
+meta.code 
+\\\hline
 obs\_release\_date &
 adql:TIMESTAMP &
 NULL &
 NULL &
 Curation.releaseDate &
-time.release &
-1 &
-0 &
-1\\\hline
+time.release 
+\\\hline
 s\_ucd   &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpatialAxis.ucd &
-meta.ucd &
-1 &
-0 &
-1\\\hline
+meta.ucd 
+\\\hline
 s\_unit   &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpatialAxis.unit &
-meta.unit &
-1 &
-0 &
-1\\\hline
+meta.unit 
+\\\hline
 s\_resolution\_min &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Resolution.Bounds.Limits.LoLimit &
-pos.angResolution;stat.min &
-1 &
-0 &
-1\\\hline
+pos.angResolution;stat.min 
+\\\hline
 s\_resolution\_max &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Resolution.Bounds.Limits.HiLimit &
-pos.angResolution;stat.max &
-1 &
-0 &
-1\\\hline
+pos.angResolution;stat.max 
+\\\hline
 s\_pixel\_scale &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Sampling.RefVal.SamplingPeriod &
-phys.angSize;instr.pixel &
-1 &
-0 &
-1\\\hline
+phys.angSize;instr.pixel 
+\\\hline
 s\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpatialAxis.calibrationStatus &
-meta.code.qual &
-1 &
-0 &
-1\\\hline
+meta.code.qual 
+\\\hline
 s\_stat\_error &
 adql:DOUBLE &
 NULL &
 arcsec &
 Char.SpatialAxis.Accuracy.StatError.Refval.value &
-stat.error;pos.eq &
-0 &
-0 &
-1\\\hline
+stat.error;pos.eq 
+\\\hline
 t\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.TimeAxis.calibrationStatus &
-meta.code.qual &
-0 &
-0 &
-1\\\hline
+meta.code.qual 
+\\\hline
 t\_stat\_error &
 adql:DOUBLE &
 NULL &
 s &
 Char.TimeAxis.Accuracy.StatError.Refval.value &
-stat.error;time &
-0 &
-0 &
-1\\\hline
+stat.error;time 
+\\\hline
 em\_ucd &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpectralAxis.ucd &
-meta.ucd &
-1 &
-TBD &
-1\\\hline
+meta.ucd 
+\\\hline
 em\_unit &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpectralAxis.unit &
-meta.unit &
-1 &
-0 &
-1\\\hline
+meta.unit 
+\\\hline
 em\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.SpectralAxis.calibrationStatus &
-meta.code.qual &
-0 &
-0 &
-1\\\hline
+meta.code.qual 
+\\\hline
 em\_res\_power\_min &
 adql:DOUBLE &
 NULL &
 NULL  &
 Char.SpectralAxis.Resolution.ResolPower.LoLimit &
-spect.resolution;stat.min &
-1 &
-0 &
-1\\\hline
+spect.resolution;stat.min 
+\\\hline
 em\_res\_power\_max &
 adql:DOUBLE &
 NULL &
 NULL &
 Char.SpectralAxis.Resolution.ResolPower.HiLimit &
-spect.resolution;stat.max &
-1 &
-0 &
-1\\\hline
+spect.resolution;stat.max 
+\\\hline
 em\_resolution &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Resolution.Refval.value &
-spect.resolution;stat.mean &
-1 &
-0 &
-1\\\hline
+spect.resolution;stat.mean 
+\\\hline
 em\_stat\_error &
 adql:DOUBLE &
 NULL &
 m &
 Char.SpectralAxis.Accuracy.StatError.Refval.value &
-stat.error;em &
-0 &
-0 &
-1\\\hline
+stat.error;em 
+\\\hline
 o\_unit &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.ObservableAxis.unit &
-meta.unit &
-1 &
-0 &
-1\\\hline
+meta.unit 
+\\\hline
 o\_calib\_status &
 adql:VARCHAR &
 NULL &
 NULL &
 Char.ObservableAxis.calibrationStatus &
-meta.code.qual &
-1 &
-TBD &
-1\\\hline
+meta.code.qual 
+\\\hline
 o\_stat\_error &
 adql:DOUBLE &
 NULL &
 o\_unit &
 Char.ObservableAxis.Accuracy.StatError.Refval.value &
-stat.error &
-0 &
-0 &
-1\\\hline
+stat.error 
+\\\hline
 proposal\_id &
 adql:VARCHAR &
 NULL &
 NULL &
 Provenance.Proposal.identifier &
-meta.id; obs.proposal &
-0 &
-TBD &
-1\\\hline
+meta.id; obs.proposal 
+\\\hline
 \end{tabular}
-Table 7 TAP.schema.columns values for the optional fields for an ObsTAP table.  All Utypes have the data model namespace
-prefix {}``obscore:'' omitted in the table.
+\caption{TAP.schema.columns values for the optional fields for an ObsTAP table.  All Utypes have the data model namespace prefix {\emph obscore:'} omitted in the table..}
+\label{table:tapschema-optional}
+\end{sidewaystable}
 
 \section{Examples of ObsTAP query responses}
 Here is a Query Response VOTable document obtained by the CADC ObsTAP/TAP1.1 service at  
 
-http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/v2query?MAXREC=0
+\url{http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/sia/v2query?MAXREC=0}
 
 It contains all mandatory fields for ObsCore1.1. and the implementation details for the Datalink service attached to the
 TAP response. 
 
-{\textless}?xml version={\textquotedbl}1.0{\textquotedbl} encoding={\textquotedbl}UTF-8{\textquotedbl}?{\textgreater}
+% ML : use listing environment instead 
 
-{\textless}VOTABLE version={\textquotedbl}1.2{\textquotedbl}
-xmlns={\textquotedbl}http://www.ivoa.net/xml/VOTable/v1.2{\textquotedbl}
-xmlns:xsi={\textquotedbl}http://www.w3.org/2001/XMLSchema-instance{\textquotedbl}
-xsi:schemaLocation={\textquotedbl}http://www.ivoa.net/xml/VOTable/v1.2
-http://www.ivoa.net/xml/VOTable/VOTable-1.2.xsd{\textquotedbl}{\textgreater}
-
-{\textless}RESOURCE type={\textquotedbl}results{\textquotedbl}{\textgreater}
-
-{\textless}INFO name={\textquotedbl}QUERY\_STATUS{\textquotedbl} value={\textquotedbl}OK{\textquotedbl} /{\textgreater}
-
-{\textless}INFO name ={\textquotedbl}QUERY{\textquotedbl} value={\textquotedbl}SELECT * FROM ivoa.ObsCore WHERE
-dataproduct\_type IN ('image', 'cube'){\textquotedbl} /{\textgreater}
-
-{\textless}TABLE{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}dataproduct\_type{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.code.class{\textquotedbl}
-utype={\textquotedbl}obscore:ObsDataset.dataProductType{\textquotedbl} xtype={\textquotedbl}adql:VARCHAR{\textquotedbl}
-arraysize={\textquotedbl}128*{\textquotedbl}{\textgreater}
-
-{\textless}DESCRIPTION{\textgreater}type of product{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}calib\_level{\textquotedbl} datatype={\textquotedbl}int{\textquotedbl}
-ucd={\textquotedbl}meta.code;obs.calib{\textquotedbl} utype={\textquotedbl}obscore:ObsDataset.calibLevel{\textquotedbl}
-xtype={\textquotedbl}adql:INTEGER{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater} calibration level (0,1,2,3,4){\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}obs\_collection{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.id{\textquotedbl} utype={\textquotedbl}obscore:DataID.collection{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}128*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}short name for the data colection{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}facility\_name{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.id;instr.tel{\textquotedbl}
-utype={\textquotedbl}obscore:Provenance.ObsConfig.Facility.name{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}128*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}telescope name{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}instrument\_name{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.id;instr{\textquotedbl}
-utype={\textquotedbl}obscore:Provenance.ObsConfig.Instrument.name{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}128*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}instrument name{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}obs\_id{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.id{\textquotedbl} utype={\textquotedbl}obscore:DataID.observationID{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}128*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}internal dataset identifier{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}obs\_release\_date{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}time.release{\textquotedbl} utype={\textquotedbl}obscore:Curation.releaseDate{\textquotedbl}
-xtype={\textquotedbl}adql:TIMESTAMP{\textquotedbl} arraysize={\textquotedbl}*{\textquotedbl}{\textgreater}
-
-{\textless}DESCRIPTION{\textgreater}timestamp of date the data becomes publicly
-available{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}access\_url{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.ref.url{\textquotedbl} utype={\textquotedbl}obscore:Access.reference{\textquotedbl}
-xtype={\textquotedbl}adql:CLOB{\textquotedbl} arraysize={\textquotedbl}*{\textquotedbl}{\textgreater}
-
-{\textless}DESCRIPTION{\textgreater}URL to download the data{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}access\_format{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.id;class{\textquotedbl} utype={\textquotedbl}obscore:Access.format{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}128*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater} format of the data file(s) {\textless}/DESCRIPTION{\textgreater}
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}access\_estsize{\textquotedbl} datatype={\textquotedbl}int{\textquotedbl}
-ucd={\textquotedbl}phys.size;meta.file{\textquotedbl} unit={\textquotedbl}kB{\textquotedbl}
-utype={\textquotedbl}obscore:Access.size{\textquotedbl} xtype={\textquotedbl}adql:INTEGER{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}estimated size of the download{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}target\_name{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.id;src{\textquotedbl}  utype={\textquotedbl}obscore:Target.name{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}32*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}name of intended target{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_ra{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}pos.eq.ra{\textquotedbl} unit={\textquotedbl}deg{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}RA of central coordinates{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_dec{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}pos.eq.dec{\textquotedbl} unit={\textquotedbl}deg{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}DEC of central coordinates{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_fov{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}phys.angSize;instr.fov{\textquotedbl} unit={\textquotedbl}deg{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpatialAxis.Coverage.Bounds.Extent.diameter{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
-{\textless}DESCRIPTION{\textgreater}size of the region covered (\~{}diameter of minimum bounding
-circle){\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_region{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}pos.outline;obs.field{\textquotedbl} unit={\textquotedbl}deg{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpatialAxis.Coverage.Support.Area{\textquotedbl}
-xtype={\textquotedbl}adql:REGION{\textquotedbl} arraysize={\textquotedbl}*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}region bounded by observation{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_resolution{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}pos.angResolution{\textquotedbl} unit={\textquotedbl}arcsec{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpatialAxis.Resolution.Refval.value{\textquotedbl}
-xtype={\textquotedbl}adql:REAL{\textquotedbl}{\textgreater}
-
-{\textless}DESCRIPTION{\textgreater}typical spatial resolution{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_xel1{\textquotedbl} datatype={\textquotedbl}long{\textquotedbl}
-ucd={\textquotedbl}meta.number{\textquotedbl} utype={\textquotedbl}obscore:Char.SpatialAxis.numBins1{\textquotedbl}
-xtype={\textquotedbl}adql:BIGINT{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}dimensions (number of pixels) along one spatial
-\ \ axis{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}s\_xel2{\textquotedbl} datatype={\textquotedbl}long{\textquotedbl}
-ucd={\textquotedbl}meta.number{\textquotedbl} utype={\textquotedbl}obscore:Char.SpatialAxis.numBins2{\textquotedbl}
-xtype={\textquotedbl}adql:BIGINT{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}dimensions (number of pixels) along the other spatial
-\ \ axis{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}t\_min{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}time.start;obs.exposure{\textquotedbl} unit={\textquotedbl}d{\textquotedbl}
-utype={\textquotedbl}obscore:Char.TimeAxis.Coverage.Bounds.Limits.StartTime{\textquotedbl} 
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}start time of observation (MJD){\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}t\_max{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}time.stop;obs.exposure{\textquotedbl} unit={\textquotedbl}d{\textquotedbl}
-utype={\textquotedbl}obscore:Char.TimeAxis.Coverage.Bounds.Limits.StopTime{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}end time of observation (MJD){\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}t\_exptime{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}time.duration;obs.exposure{\textquotedbl} unit={\textquotedbl}s{\textquotedbl}
-utype={\textquotedbl}obscore:Char.TimeAxis.Coverage.Support.Extent{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}exposure time of observation{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}t\_resolution{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}time.resolution{\textquotedbl} unit={\textquotedbl}s{\textquotedbl}
-utype={\textquotedbl}obscore:Char.TimeAxis.Resolution.Refval.value{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}typical temporal resolution{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}t\_xel{\textquotedbl} datatype={\textquotedbl}long{\textquotedbl}
-ucd={\textquotedbl}meta.number{\textquotedbl} utype={\textquotedbl}obscore:Char.TimeAxis.numBins{\textquotedbl}
-xtype={\textquotedbl}adql:BIGINT{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}dimensions (number of pixels) along the time
-\ \ axis{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}em\_min{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}em.wl;stat.min{\textquotedbl} unit={\textquotedbl}m{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpectralAxis.Coverage.Bounds.Limits.LoLimit{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}start spectral coordinate value{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}em\_max{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}em.wl;stat.max{\textquotedbl} unit={\textquotedbl}m{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpectralAxis.Coverage.Bounds.Limits.HiLimit{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}stop spectral coordinate value{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}em\_res\_power{\textquotedbl} datatype={\textquotedbl}double{\textquotedbl}
-ucd={\textquotedbl}spec.resolution{\textquotedbl}
-utype={\textquotedbl}obscore:Char.SpectralAxis.Resolution.ResolPower.refVal{\textquotedbl}
-xtype={\textquotedbl}adql:DOUBLE{\textquotedbl}{\textgreater}
-
-{\textless}DESCRIPTION{\textgreater}typical spectral resolution{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}em\_xel{\textquotedbl} datatype={\textquotedbl}long{\textquotedbl}
-ucd={\textquotedbl}meta.number{\textquotedbl} utype={\textquotedbl}obscore:Char.SpectralAxis.numBins{\textquotedbl}
-xtype={\textquotedbl}adql:BIGINT{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}dimensions (number of pixels) along the energy
-\ \ axis{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}em\_ucd{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.ucd{\textquotedbl} utype={\textquotedbl}obscore:Char.SpectralAxis.ucd{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}32*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}UCD describing the spectral axis{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}pol\_states{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}phys.polarization{\textquotedbl}
-utype={\textquotedbl}obscore:Char.PolarizationAxis.stateList{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}32*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}polarization states present in the data{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}pol\_xel{\textquotedbl} datatype={\textquotedbl}long{\textquotedbl}
-ucd={\textquotedbl}meta.number{\textquotedbl} utype={\textquotedbl}obscore:Char.PolarizationAxis.numBins{\textquotedbl}
-xtype={\textquotedbl}adql:BIGINT{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}dimensions (number of pixels) along the polarization
-axis{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}o\_ucd{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ucd={\textquotedbl}meta.ucd{\textquotedbl} utype={\textquotedbl}obscore:Char.ObservableAxis.ucd{\textquotedbl}
-xtype={\textquotedbl}adql:VARCHAR{\textquotedbl} arraysize={\textquotedbl}32*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}UCD describing the observable axis (pixel
-\ \ values){\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}core\_id{\textquotedbl} datatype={\textquotedbl}long{\textquotedbl}
-xtype={\textquotedbl}adql:BIGINT{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}primary key{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}lastModified{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-xtype={\textquotedbl}adql:TIMESTAMP{\textquotedbl} arraysize={\textquotedbl}*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}time stamp of last modification of the
-metadata{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}FIELD name={\textquotedbl}obs\_publisher\_did{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ID={\textquotedbl}caomPlaneURI{\textquotedbl} ucd={\textquotedbl}meta.ref.ivoid{\textquotedbl}
-utype={\textquotedbl}obscore:Curation.publisherDID{\textquotedbl} xtype={\textquotedbl}adql:VARCHAR{\textquotedbl}
-arraysize={\textquotedbl}256*{\textquotedbl}{\textgreater}
-
- {\textless}DESCRIPTION{\textgreater}publisher dataset identifier{\textless}/DESCRIPTION{\textgreater}
-
-{\textless}/FIELD{\textgreater}
-
-{\textless}DATA{\textgreater}
-
- {\textless}TABLEDATA /{\textgreater}
-
-{\textless}/DATA{\textgreater}
-
-{\textless}/TABLE{\textgreater}
-
- {\textless}INFO name={\textquotedbl}QUERY\_STATUS{\textquotedbl} value={\textquotedbl}OK{\textquotedbl} /{\textgreater}
-
-{\textless}/RESOURCE{\textgreater}
-
-{\textless}RESOURCE type={\textquotedbl}meta{\textquotedbl}
-utype={\textquotedbl}adhoc:service{\textquotedbl}{\textgreater}
-
- {\textless}PARAM name={\textquotedbl}resourceIdentifier{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-arraysize={\textquotedbl}*{\textquotedbl} value={\textquotedbl}ivo://cadc.nrc.ca/datalink{\textquotedbl}
-/{\textgreater}
-
- {\textless}PARAM name={\textquotedbl}standardID{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-arraysize={\textquotedbl}*{\textquotedbl} value={\textquotedbl}ivo://ivoa.net/std/DataLink\#links-1.0{\textquotedbl}
-/{\textgreater}
-
- {\textless}PARAM name={\textquotedbl}accessURL{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-arraysize={\textquotedbl}61{\textquotedbl}
-value={\textquotedbl}http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/caom2ops/datalink{\textquotedbl} \ \ /{\textgreater}
-
- {\textless}GROUP name={\textquotedbl}inputParams{\textquotedbl}{\textgreater}
-
- {\textless}PARAM name={\textquotedbl}ID{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-ref={\textquotedbl}caomPlaneURI{\textquotedbl} arraysize={\textquotedbl}*{\textquotedbl}
-value={\textquotedbl}{\textquotedbl} /{\textgreater}
-
- {\textless}PARAM name={\textquotedbl}RESPONSEFORMAT{\textquotedbl} datatype={\textquotedbl}char{\textquotedbl}
-arraysize={\textquotedbl}*{\textquotedbl}
-\ \ value={\textquotedbl}application/x-votable+xml;content=datalink{\textquotedbl}{\textgreater}
-
-  {\textless}VALUES{\textgreater}
-
- {\textless}OPTION value={\textquotedbl}application/x-votable+xml;content=datalink{\textquotedbl} /{\textgreater}
-
- {\textless}OPTION value={\textquotedbl}application/x-download-manifest+txt{\textquotedbl} /{\textgreater}
-
- {\textless}/VALUES{\textgreater}
-
- {\textless}/PARAM{\textgreater}
-
- {\textless}/GROUP{\textgreater}
-
-{\textless}/RESOURCE{\textgreater}
-
-{\textless}/VOTABLE{\textgreater}
+%\begin{lstlisting} [language=XML, caption= Query Response]{VOtableResponseExemple.xml}
+ 
 
 \end{document}
