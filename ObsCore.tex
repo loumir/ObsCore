@@ -34,9 +34,12 @@
 \usepackage{listings}
 \usepackage{ltablex}
 \usepackage{seqsplit}
-
+\usepackage{caption} % For \captionof
+\usepackage{soul}
+\usepackage{xcolor}
 
 \begin{document}
+
 %setup listing printing parameters
 %\lstset{ %
 %  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
@@ -164,6 +167,7 @@ and applications.
 \caption{Architecture of an ObsTAP service}
 \label{fig:archdiag}
 \end{figure}
+
 The architecture of an ObsTAP service: it is based on the ObsCore data model,
 which re-uses parts of Characterisation, Spectrum, STC data models and the UCD and Units specifications. As a service
 ObsTAP relies on ADQL, TAP, UWS, TAPRegExt, VOSI and VOTable. Examples and use-cases are exposed following the
@@ -202,7 +206,7 @@ This document is organized as follows:
 \item Section \ref{sec:use-cases} briefly presents the types of the use cases collected from the astronomical
 community by the IVOA Uptake committee.
 \item Section \ref{sec:core-components} defines the core components of the Observation data model. The elements of the data
-model are summarized in Figure \ref{fig:obsdataset}. Mandatory ObsTAP fields are summarized in Table 1.
+model are summarized in Figure \ref{fig:obsdataset}. Mandatory ObsTAP fields are summarized in Table \ref{tab:1}.
 \item Section \ref{sec:obstap-impl} specifies the required data model fields as they are used in the TAP service: table
 names, column names, column data type, UCD, Utype from the Observation Core components data model, and required units.
 \item Section \ref{sec:obstap-register} describes how to register an ObsTAP service in a Virtual Observatory registry.
@@ -291,6 +295,7 @@ purposes here we show Characterisation classes only down to the level of the Sup
 \caption{ObsDataset metadata}
 \label{fig:obsdataset}
 \end{figure}
+
 Figure \ref{fig:obsdataset} depicts the classes used to organize observational metadata. Classes may be linked either via
 association or aggregation.  The minimal set of necessary attributes for data discovery is shown in brown.
 
@@ -305,6 +310,7 @@ Figure 5 for the time axis.
 \caption{Spatial Axis Characterisation}
 \label{fig:char-spatial}
 \end{figure}
+
 Figure \ref{fig:char-spatial} shows the details of the classes linked to the description of the
 spatial axis for an Observation dataset. All axes in this model inherit the main structure from the
 CharacterisationAxis class, but some peculiar attributes are necessary for Space coordinates.
@@ -316,6 +322,7 @@ CharacterisationAxis class, but some peculiar attributes are necessary for Space
 \caption{Spectral Axis Characterisation}
 \label{fig:char-spectral}
 \end{figure}
+
 Figure \ref{fig:char-spectral} shows the Spectral axis: details of the classes necessary to
 describe the spectral properties of an Observation dataset. UCD and units are essential to disentangle various possible
 spectral quantities.
@@ -327,6 +334,7 @@ spectral quantities.
 \caption{Time Axis Characterisation}
 \label{fig:char-time}
 \end{figure}
+
 Figure \ref{fig:char-time} shows the classes from the Characterisation DM used to
 describe time metadata.
 
@@ -341,14 +349,16 @@ useful to describe the data but are not immediately required to support the use 
 set is described.  That set coincides with the set of parameters that any ObsTAP service must support. Please refer to
 appendix B for the detailed description of all model elements.
 
-Table 1 lists the data model elements that any ObsTAP implementation must support (i.e. a column with such name must
+Table \ref{tab:1} lists the data model elements that any ObsTAP implementation must support (i.e. a column with such name must
 exist, though, in some cases, it could be nillable).  Provision of these mandatory fields ensures that any query based
 on these parameters is guaranteed to be understood by all ObsTAP services.
 
 NB: Data model fields are listed here with their TAP column name rather than the IVOA data model element identifiers
 (Utype) to ease readability.  See the associated Utypes in Appendix C.
 
-%\begin{table}[h]
+The current table counter is: \arabic{table}.
+
+%\begin{table}[htbp]
 %\begin{center}
 \begin{tabularx}{\textwidth}{|p{0.25\textwidth}|p{0.12\textwidth}|p{0.1\textwidth}|p{0.39\textwidth}|}
 \hline
@@ -383,10 +393,10 @@ pol\_states & unitless & String & List of polarization states or NULL if not app
 pol\_xel & unitless & integer & Number of polarization samples \\\hline
 facility\_name & unitless & String & Name of the facility used for this observation \\\hline
 instrument\_name & unitless & String & Name of the instrument used for this observation \\\hline
+\caption{Mandatory fields of the Observation Core Components data model with their name, recommended units, data type and designation.}
+\label{tab:1}
 \end{tabularx}
 %\end{center}
-\label{bkm:Ref460858868}Table T1.  Mandatory fields of the Observation Core Components data
-model with their name, recommended units, data type and designation.
 %\end{table}
 
 \subsection{Specific Data Model Elements}
@@ -482,8 +492,9 @@ event & ROSAT/HEASARC & 1 & Instrumental data\\\hline
 visibility & ALMA, Merlin, etc. & 1 & Instrumental data\\\hline
 measurements & ESO tile catalog  & 4 & Photometric catalog of extracted sources for a tile image\\\hline
 timeseries & CTA reconstructed light curve  & 4 & Reconstructed light curve following photons vs particles separation under some assumption \\\hline
+\caption{Examples of datasets with their associated calibration level values.}
+\label{tab:2}
 \end{tabularx}
-\label{T2}Table T2. Examples of datasets with their associated calibration level values.
 %\end{center}
 %\end{table}
 
@@ -564,8 +575,9 @@ straightforward.
 \hline
 schema\_name & table\_name & Description\\\hline
 ivoa & ivoa.ObsCore & ObsCore 1.1\\\hline
+\caption{TAP\_SCHEMA.tables for implementation of the ObsCore model.}
+\label{tab:3}
 \end{tabularx}
-\label{T3}Table T3. TAP\_SCHEMA.tables for implementation of the ObsCore model.
 %\end{center}
 %\end{table}
 
@@ -604,20 +616,21 @@ ivoa.ObsCore & pol\_states  & adql:VARCHAR & & \\\hline
 ivoa.ObsCore & pol\_xel & adql:BIGINT & & \\\hline
 ivoa.ObsCore & facility\_name & adql:VARCHAR & & \\\hline
 ivoa.ObsCore & instrument\_name & adql:VARCHAR & & \\\hline
+\caption{List of the minimal set of data model fields to
+implement for an ObsTAP service. See tables of Appendix C for the full description of the TAP\_SCHEMA.columns table.}
+\label{tab:4}
 \end{tabularx}
 %\end{center}
-\label{tab:4}Table T4. List of the minimal set of data model fields to
-implement for an ObsTAP service. See tables of Appendix C for the full description of the TAP\_SCHEMA.columns table.
 %\end{table}
-\vspace{0.3cm}
+%\vspace{0.3cm}
 
-Table 3 and Table 4 provide the primary information needed to describe the ObsCore model in terms of TAP\_SCHEMA tables
+Table \ref{tab:3} and Table \ref{tab:4} provide the primary information needed to describe the ObsCore model in terms of TAP\_SCHEMA tables
 and columns.
 
 The ``datatype'' column values should follow the TAP standard specification and are bound to the TAP specification
 version used to implement the model. Here what is shown applies for TAP v1.0.
 
-The content of the ``constraint'' column specified in Table 4 above is not part of the TAP\_SCHEMA.columns description,
+The content of the ``constraint'' column specified in Table \ref{tab:4} above is not part of the TAP\_SCHEMA.columns description,
 but is required by the ObsCore model and specified here to make this clear to implementers.  Additional standard
 content for the individual columns is specified below.
 
@@ -730,7 +743,7 @@ is to adopt the MIME type mechanism to describe the file format of a science dat
 needed.  Note this is distinct from the science content which is specified by the data product type and subtype.  The
 same content can potentially be represented in multiple formats hence these are distinct.
 
-The following table illustrates some common astronomical file formats.  This list is by no means intended to be
+The following Table \ref{tab:5} illustrates some common astronomical file formats.  This list is by no means intended to be
 comprehensive; rather it illustrates the approach while defining standard values for some common formats.  Some
 randomly selected formats are included to illustrate the approach.  We can extend this list as experience is gained
 using ObsTAP to describe actual data archives.
@@ -762,11 +775,12 @@ image/x-fits-gzip & fits & A GZIP-compressed FITS image\\\hline
 image/x-fits-hcompress & fits & A FITS image using HCOMPRESS compression\\\hline
 application/x-tar-gzip & gtar & A GZIP-compressed TAR file (x-gtar also sometimes used)\\\hline
 application/x-votable+xml; content=datalink & datalink & A datalink response containing links to  data sets or services attached to the current dataset\\\hline
+\caption{Common astronomical file formats.}
+\label{tab:5}
 \end{tabularx}
 %\end{center}
-\label{tab:5}Table T5: TODO: label from orig doc
 %\end{table}
-\vspace{0.3cm}
+%\vspace{0.3cm}
 
 The value of access\_format should be a MIME type, either a standard MIME type, an extended MIME type from the above
 table, or a new custom MIME type defined by the data provider.  The short names suggested here are not used directly by
@@ -834,7 +848,7 @@ translate these into native SQL that enforces the same conditions or a suitable 
 approximate the spatial query conditions by translating the INTERSECTS and CONTAINS function calls in the query.
 
 Because ObsTAP relies on ADQL queries and builds up on TAP, the mapping between the ObsCore model data types, as shown
-in Table 1.  Mandatory fields of the Observation Core Components data model with their name, recommended units, data
+in Table \ref{tab:1}.  Mandatory fields of the Observation Core Components data model with their name, recommended units, data
 type and designation.should be adjusted to the definitions stated in the TAP version used for the ObsTAP service.
 
 Region computations are an advanced query capability which may not be supported by all services.  Services should
@@ -1479,19 +1493,19 @@ brevity.
 \begin{tabularx}{\textwidth}{|p{0.26\textwidth}|p{0.28\textwidth}|p{0.09\textwidth}|p{0.08\textwidth}|p{0.25\textwidth}|p{0.05\textwidth}|}
 \hline
 {Column Name} & Utype & Unit & Type & Description & MAN\\\hline
-\multicolumn{6}{|c|}{\centering OBSERVATION INFORMATION (section B.1)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{OBSERVATION INFORMATION} (section B.1)}\\\hline
 {dataproduct\_type} &
   \seqsplit{ObsDataset.dataProductType} & unitless & enum string & Data product (file content) primary type  & YES\\\hline
 {dataproduct\_subtype} &
   \seqsplit{ObsDataset.dataProductSubtype} & unitless & string & Data product specific type & NO\\\hline
 {calib\_level} &
   \seqsplit{ObsDataset.calibLevel} & unitless & enum int & Calibration level of the observation: in \{0, 1, 2, 3, 4\}  & YES\\\hline
-\multicolumn{6}{|c|}{\centering TARGET INFORMATION (section B.2)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{TARGET INFORMATION} (section B.2)}\\\hline
 {target\_name} &
   Target.name & unitless & string & Object of interest & YES\\\hline
 {target\_class} &
   Target.class &  unitless & string & Class of the Target object as in SSA & NO\\\hline
-\multicolumn{6}{|c|}{\centering DATA DESCRIPTION (section B.3)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{DATA DESCRIPTION} (section B.3)}\\\hline
 {obs\_id} &
   \seqsplit{DataID.observationID} & unitless & string & Internal  ID given by the ObsTAP service & YES\\\hline
 {obs\_title} &
@@ -1504,7 +1518,7 @@ brevity.
   DataID.creator & unitless & string & Name of the creator of the data & NO\\\hline
 {obs\_creator\_did } &
   DataID.creatorDID & unitless & string & IVOA dataset identifier given by the creator  & NO\\\hline
-\multicolumn{6}{|c|}{\centering CURATION INFORMATION (section B.4)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{CURATION INFORMATION} (section B.4)}\\\hline
 {obs\_release\_date} &
   Curation.releaseDate & unitless & date & Observation release date (ISO 8601) & NO\\\hline
 {obs\_publisher\_did } &
@@ -1515,14 +1529,14 @@ brevity.
   Curation.reference & unitless & string & Service bibliographic reference & NO\\\hline
 {data\_rights } &
   Curation.rights & unitless & enum string  & \seqsplit{Public/Secure/Proprietary} & NO\\\hline
-\multicolumn{6}{|c|}{\centering ACCESS INFORMATION (section B.5)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{ACCESS INFORMATION} (section B.5)}\\\hline
 {access\_url } &
   Access.reference & unitless & string & URL used to access dataset & YES\\\hline
 {access\_format } &
   Access.format & unitless & string & Content format of the dataset  & YES\\\hline
 {access\_estsize } &
   Access.size & Kbyte & Int & Estimated size of dataset: in kilobytes  & YES\\\hline
-\multicolumn{6}{|c|}{\centering SPATIAL CHARACTERISATION (section B6.1)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{SPATIAL CHARACTERISATION} (section B6.1)}\\\hline
 {s\_ra } &
   \seqsplit{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1} &
   Deg & double & Central Spatial Position in ICRS Right ascension  & YES\\\hline
@@ -1565,7 +1579,7 @@ brevity.
 {s\_pixel\_scale} &
   \seqsplit{Char.SpatialAxis.Sampling.RefVal.SamplingPeriod} &
   Arcsec & double & Sampling period in world coordinate units along the spatial axis & NO\\\hline
-\multicolumn{6}{|c|}{\centering TIME CHARACTERISATION (section B6.3)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{TIME CHARACTERISATION} (section B6.3)}\\\hline
 {t\_xel } &
   \seqsplit{Char.TimeAxis.numBins} &
   unitless & integer & Number of elements along the time axis & YES\\\hline
@@ -1587,7 +1601,7 @@ brevity.
 {t\_stat\_error } &
   \seqsplit{Char.TimeAxis.Accuracy.StatError.Refval.value} &
   S & double & Time coord statistical error & NO\\\hline
-\multicolumn{6}{|c|}{\centering SPECTRAL CHARACTERISATION (section B6.2)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{SPECTRAL CHARACTERISATION} (section B6.2)}\\\hline
 {em\_xel } &
   \seqsplit{Char.SpectralAxis.numBins} &
   unitless & integer & Number of elements along the spectral axis & YES\\\hline
@@ -1621,7 +1635,7 @@ brevity.
 {em\_stat\_error } &
   \seqsplit{Char.SpectralAxis.Accuracy.StatError.Refval.value} &
   M & double & Spectral coord statistical error & NO\\\hline
-\multicolumn{6}{|c|}{\centering OBSERVABLE AXIS (section B6.4)}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{OBSERVABLE AXIS} (section B6.4)}\\\hline
 {o\_ucd } &
   \seqsplit{Char.ObservableAxis.ucd} &
   unitless & String & Nature of the observable axis & YES\\\hline
@@ -1634,14 +1648,14 @@ brevity.
 {o\_stat\_error } &
   \seqsplit{Char.ObservableAxis.Accuracy.StatError.Refval.value} &
   units specified  by o\_unit & double & Statistical error on the Observable axis & NO\\\hline
-\multicolumn{6}{|c|}{\centering POLARIZATION CHARACTERISATION (section \ref{bkm:Ref482804077})}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{POLARIZATION CHARACTERISATION} (section \ref{bkm:Ref482804077})}\\\hline
 {pol\_xel } &
   \seqsplit{Char.PolarizationAxis.numBins} &
   unitless & integer & Number of elements along the polarization axis & YES\\\hline
 {pol\_states} &
   \seqsplit{Char.PolarizationAxis.stateList} &
   unitless & Enum string & List of polarization states present in the data file  & YES\\\hline
-\multicolumn{6}{|c|}{\centering PROVENANCE (section \ref{bkm:Ref482804135})}\\\hline
+\multicolumn{6}{|l|}{\rule{0pt}{12pt}\hl{PROVENANCE} (section \ref{bkm:Ref482804135})}\\\hline
 {facility\_name} &
   \seqsplit{Provenance.ObsConfig.Facility.name} &
   unitless & string & The name of the facility, telescope space craft used for the observation  & YES\\\hline
@@ -1651,9 +1665,10 @@ brevity.
 {proposal\_id } &
   \seqsplit{Provenance.Proposal.identifier} &
   unitless & string & Identifier of proposal to which observation belongs & NO\\\hline
+\caption{Table X:  Data model summary (with addition of axes dimension and UCD for each axis)}
+\label{tab:6}
 \end{tabularx}
 %\end{landscape}
-Table X:  Data model summary (with addition of axes dimension and UCD for each axis)
 
 \subsection{Observation Information}
 This class is a place holder that gathers all metadata relative to an observed and distributed dataset. It points to
@@ -1902,7 +1917,9 @@ Char.SpatialAxis.Coverage.Bounds.Extent.diameter, a new definition added in Char
 A precise region description of spatial footprint of the dataset using region types like Circle, Polygon, etc., provided
 in STC.  The Utypes:
 
-Char.SpatialAxis.Coverage.Support.Area Char.SpatialAxis.Coverage.Support.AreaType
+Char.SpatialAxis.Coverage.Support.Area
+
+Char.SpatialAxis.Coverage.Support.AreaType
 
 define this region.
 
@@ -1946,8 +1963,9 @@ Depending on the UCD used to specify the axis, the ObsCore model allows to descr
 relevant unit, corresponding to the spectral quantity, and specified in the model in Char.SpectralAxis.unit (em\_unit)
 
 Here is a short list of preferred value for the Observation data model Core Components extracted from the recommended
-values proposed in the Spectrum DM.
+values proposed in the Spectrum DM:
 
+\vspace{0.3cm}
 \begin{tabular}{|l|p{0.3\textwidth}|p{0.3\textwidth}|p{0.3\textwidth}|}
 \hline
 Spectral coordinate & Char.SpectralAxis.ucd & Char.SpectralAxis.unit\\\hline
@@ -1955,6 +1973,8 @@ Frequency & em.freq & Hz\\\hline
 Wavelength & em.wl & m or angstrom\\\hline
 Energy & em.energy & keV, J, erg\\\hline
 \end{tabular}
+\vspace{0.3cm}
+
 Note that for the ObsTAP implementation, the Spectral axis coordinates are constrained as a wavelength quantity
 expressed in meters as mentioned in section \ref{bkm:Ref285651639}
 
@@ -2010,15 +2030,17 @@ Dataset including an axis representing Doppler velocity (e.g., a velocity cube) 
 specification. This can be indicated by specifying an appropriate value for the optional em\_ucd attribute, defining
 the type of velocity on the axis. The following UCD values are defined to represent velocities:
 
-\newpage % Force a new page
-\begin{tabularx}{\textwidth}{|p{0.3\textwidth}|p{0.5\textwidth}|}
+%\newpage % Force a new page
+\vspace{0.3cm}
+\begin{tabular}{|p{0.3\textwidth}|p{0.5\textwidth}|}
 \hline
 UCD & Definition\\\hline
 spect.dopplerVeloc.opt & Radial velocity derived from a wavelength shift using the optical convention\\\hline
 spect.dopplerVeloc.radio & Radial velocity derived from a frequency shift using the radio convention\\\hline
 spect.dopplerVeloc.rel & Radial velocity, derived using the relativistic convention\\\hline
 spect.doppler.z & Redshift derived from a spectral feature\\\hline
-\end{tabularx}%
+\end{tabular}%
+\vspace{0.3cm}
 
 
 If em\_ucd contains one of these strings, then the discovered datasets can be any velocity or redshift data product.
@@ -2136,12 +2158,18 @@ version of ObsCore.
 As an example, the type of noise present in an observation is not modeled. It depends on the instrument, on the data
 collection and can be defined in an optional column name in the IVOA.Obscore table like:
 
+
+\vspace{0.3cm}
+\noindent
 \scriptsize
-\begin{tabularx}{\textwidth}{|p{0.2\textwidth}|p{0.17\textwidth}|p{0.04\textwidth}|p{0.07\textwidth}|p{0.12\textwidth}|p{0.11\textwidth}|p{0.06\textwidth}|p{0.06\textwidth}|p{0.06\textwidth}|}
+\begin{tabular}{|p{0.2\textwidth}|p{0.17\textwidth}|p{0.04\textwidth}|p{0.07\textwidth}|p{0.12\textwidth}|p{0.11\textwidth}|p{0.06\textwidth}|p{0.06\textwidth}|p{0.06\textwidth}|}
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD & Princ. & Index & Std\\\hline
 o\_stat\_error\_type   & adql:VARCHAR   & 20 & NULL & NULL & \seqsplit{stat.error;meta.code} & 1 & 0 & 0\\\hline
-\end{tabularx}
+\end{tabular}
+\vspace{0.3cm}
+\normalsize
+
 
 Possible values of o\_stat\_error\_type could be: \{poisson, gauss, speckle\} and mentioned in the description of
 additional columns (See section \ref{bkm:Ref421297012} for more details)
@@ -2201,15 +2229,21 @@ different data products, all packed together in an archive file.
 
 For example, for High Energy datasets we could have as the table response of an ObsTAP query:
 
-\newpage % Force a new page
-\begin{tabularx}{\textwidth}{|p{0.07\textwidth}|p{0.09\textwidth}|p{0.23\textwidth}|p{0.12\textwidth}|p{0.18\textwidth}|p{0.28\textwidth}|}
+
+\vspace{0.3cm}
+\noindent
+\scriptsize
+\begin{tabular}{|p{0.07\textwidth}|p{0.09\textwidth}|p{0.23\textwidth}|p{0.12\textwidth}|p{0.18\textwidth}|p{0.28\textwidth}|}
 \hline
 obs\_id & data product type & data product subtype   & Calibration Level   & Access Format   & Title\\\hline
 123   & event   & chandra.hrc.pkg   & 1 & application/x-tar-gzip   & Chandra ACS-XYZ observation package (event,refimage)\\\hline
 123   & image   & chandra.hrc.refimage   & 2 & image/fits   & ACS-XYZ reference image\\\hline
 123   & image   & chandra.hrc.preview   & 2 & image/jpeg   & Chandra ACS-XYZ preview image\\\hline
 345   & event   & rosat.foo.pkg   & 1 & application/x-tar-gzip & ROSAT observation package\\\hline
-\end{tabularx}
+\end{tabular}
+\vspace{0.3cm}
+\normalsize
+
 
 The subtype could in principle be more generic but will likely be instrument-specific for a level 1 data product.
 
@@ -2252,7 +2286,7 @@ service.
 {}`indexed': tells if this column can be used as table index to optimize queries. Possible values for each of these
 three fields are integers, with this convention: (0=false, 1=true).
 
-Table  6  TAP\_SCHEMA.columns values for the mandatory fields of an ObsTAP table. All Utypes have the data model
+Tables \ref{table:tapschema-mandatory1} and \ref{table:tapschema-mandatory2} show TAP\_SCHEMA.columns values for the mandatory fields of an ObsTAP table. All Utypes have the data model
 namespace prefix {}``obscore:'' omitted in the table. The Datatype, Size, Principal, Index, and Std values shown here
 are informative for TAP 1.0 only; later versions of TAP may specify different values.
 
@@ -2377,9 +2411,8 @@ Char.SpatialAxis.numBins2 &
 meta.number
 \\\hline
 \end{tabular}
-\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.
-Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted in the table..}
-\label{table:tapschema-mandatory}
+\caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table. Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted in the table..}
+\label{table:tapschema-mandatory1}
 \end{sidewaystable}
 
 \begin{sidewaystable}
@@ -2487,7 +2520,7 @@ meta.id;instr
 \\\hline
 \end{tabular}
 \caption{TAP.schema.columns values for the mandatory fields for an ObsTAP table.  Part 2.}
-\label{table:tapschema-mandatory}
+\label{table:tapschema-mandatory2}
 \end{sidewaystable}
 
 %
