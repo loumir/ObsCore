@@ -34,6 +34,7 @@
 \usepackage{listings}
 \usepackage{ltablex}
 \usepackage{seqsplit}
+\usepackage{graphicx}
 
 
 \begin{document}
@@ -2010,14 +2011,16 @@ Dataset including an axis representing Doppler velocity (e.g., a velocity cube) 
 specification. This can be indicated by specifying an appropriate value for the optional em\_ucd attribute, defining
 the type of velocity on the axis. The following UCD values are defined to represent velocities:
 
+\newpage % Force a new page
 \begin{tabularx}{\textwidth}{|p{0.3\textwidth}|p{0.5\textwidth}|}
 \hline
-Ucd & Definition\\\hline
+UCD & Definition\\\hline
 spect.dopplerVeloc.opt & Radial velocity derived from a wavelength shift using the optical convention\\\hline
 spect.dopplerVeloc.radio & Radial velocity derived from a frequency shift using the radio convention\\\hline
 spect.dopplerVeloc.rel & Radial velocity, derived using the relativistic convention\\\hline
 spect.doppler.z & Redshift derived from a spectral feature\\\hline
-\end{tabularx}
+\end{tabularx}%
+
 
 If em\_ucd contains one of these strings, then the discovered datasets can be any velocity or redshift data product.
 However the spectral coverage of the dataset should still be specified in em\_min, em\_max as the vacuum wavelength in
@@ -2199,10 +2202,11 @@ different data products, all packed together in an archive file.
 
 For example, for High Energy datasets we could have as the table response of an ObsTAP query:
 
-\begin{tabularx}{\textwidth}{|p{0.07\textwidth}|p{0.09\textwidth}|p{0.23\textwidth}|p{0.12\textwidth}|p{0.19\textwidth}|p{0.3\textwidth}|}
+\newpage % Force a new page
+\begin{tabularx}{\textwidth}{|p{0.07\textwidth}|p{0.09\textwidth}|p{0.23\textwidth}|p{0.12\textwidth}|p{0.18\textwidth}|p{0.28\textwidth}|}
 \hline
 obs\_id & data product type & data product subtype   & Calibration Level   & Access Format   & Title\\\hline
- 123   & event   & chandra.hrc.pkg   & 1 & application/x-tar-gzip   & Chandra ACS-XYZ observation package (event,refimage)\\\hline
+123   & event   & chandra.hrc.pkg   & 1 & application/x-tar-gzip   & Chandra ACS-XYZ observation package (event,refimage)\\\hline
 123   & image   & chandra.hrc.refimage   & 2 & image/fits   & ACS-XYZ reference image\\\hline
 123   & image   & chandra.hrc.preview   & 2 & image/jpeg   & Chandra ACS-XYZ preview image\\\hline
 345   & event   & rosat.foo.pkg   & 1 & application/x-tar-gzip & ROSAT observation package\\\hline
@@ -2256,6 +2260,7 @@ are informative for TAP 1.0 only; later versions of TAP may specify different va
 %TITOTOTO
 \begin{sidewaystable}
 %\begin{longtable}[hbt]
+\small
 \begin{tabular}{|l|l|l|l|l|l|}% 6 left justified
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
@@ -2380,6 +2385,7 @@ Part 1. All Utypes have the data model namespace prefix {\emph obscore:} omitted
 
 \begin{sidewaystable}
 %\begin{longtable}[hbt]
+\small
 \begin{tabular}{|l|l|l|l|l|l|}% 9 left justified
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
@@ -2486,8 +2492,9 @@ meta.id;instr
 \end{sidewaystable}
 
 %
- \newpage
+\newpage
 \begin{sidewaystable}
+\small
 \begin{tabular}{ | l | l | l | l | l | l | l | l}% 9 left justified
 \hline
 Column Name & Datatype & Size & Units & ObsCoreDM Utype & UCD \\\hline
