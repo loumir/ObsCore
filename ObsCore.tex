@@ -34,9 +34,34 @@
 \usepackage{listings}
 \usepackage{ltablex}
 \usepackage{seqsplit}
-\usepackage{caption} % For \captionof
 \usepackage{soul}
 \usepackage{xcolor}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\lstdefinelanguage{XML}
+    {
+    frame=single,
+    xleftmargin=20pt,
+    framexleftmargin=15pt,
+    numbers=left,
+    numberstyle=\tiny,
+    numbersep=5pt,
+    breaklines=true,
+    showstringspaces=false,
+      basicstyle=\ttfamily\footnotesize,
+      morestring=[b]",
+      moredelim=[s][\bfseries\color{red}]{<}{\ },
+      moredelim=[s][\bfseries\color{red}]{</}{>},
+      moredelim=[l][\bfseries\color{red}]{/>},
+      moredelim=[l][\bfseries\color{red}]{>},
+      moredelim=[s][\bfseries\color{black}]{>}{<},
+      morecomment=[s]{<?}{?>},
+      morecomment=[s]{<!--}{-->},
+      commentstyle=\color{gray},
+      stringstyle=\color{black},
+      keywordstyle=\color{blue},
+      identifierstyle=\color{red}
+    }
 
 \begin{document}
 
@@ -353,10 +378,9 @@ Table \ref{tab:1} lists the data model elements that any ObsTAP implementation m
 exist, though, in some cases, it could be nillable).  Provision of these mandatory fields ensures that any query based
 on these parameters is guaranteed to be understood by all ObsTAP services.
 
+
 NB: Data model fields are listed here with their TAP column name rather than the IVOA data model element identifiers
 (Utype) to ease readability.  See the associated Utypes in Appendix C.
-
-The current table counter is: \arabic{table}.
 
 %\begin{table}[htbp]
 %\begin{center}
@@ -414,31 +438,32 @@ content and organization of a dataset.  We consider a coarse classification of t
 science usage, covering: image, cube, spectrum, SED, time series, visibility data, and event data.
 
 \begin{itemize}
-\item image An astronomical image, typically a 2D image with two spatial axes, e.g., a FITS image.  The image content
+\item[\textbf{image}] An astronomical image, typically a 2D image with two spatial axes, e.g., a FITS image.  The image content
 may be complex, e.g., an objective-grism observation would be considered a type of image, even though an extracted
 spectrum would be a Spectrum data product.
-\item cube  A multidimensional astronomical image with 3 or more image axes, e.g., a spectral image cube, a polarization
+\item[\textbf{cube}]  A multidimensional astronomical image with 3 or more image axes, e.g., a spectral image cube, a polarization
 cube, a full Stokes radio data cube, a time image cube, etc.  The most common format for astronomical ``cube'' data
 products is a multidimensional FITS image, however other formats are allowed so long as they are adequately described.
-\item spectrum Any dataset for which spectral coverage is the primary attribute, e.g., a 1D spectrum or a long slit
+\item[\textbf{spectrum}] Any dataset for which spectral coverage is the primary attribute, e.g., a 1D spectrum or a long slit
 spectrum.
-\item sed  A spectral energy distribution, an advanced data product often produced by combining data from multiple
+\item[\textbf{sed}]  A spectral energy distribution, an advanced data product often produced by combining data from multiple
 observations.
-\item timeseries A one dimensional array presenting some quantity as a function of time.  A light curve is a typical
+\item[\textbf{timeseries}] A one dimensional array presenting some quantity as a function of time.  A light curve is a typical
 example of a time series dataset.
-\item visibility A visibility (radio) dataset of some sort.  Typically this is instrumental data, i.e.,
+\item[\textbf{visibility}] A visibility (radio) dataset of some sort.  Typically this is instrumental data, i.e.,
 {\textquotedbl}visibility data{\textquotedbl}.  A visibility dataset is often a complex object containing multiple
 files or other substructures.  A visibility dataset may contain data with spatial, spectral, time, and polarization
 information for each measured visibility, hence can be used to produce higher level data products such as image,
 spectra, timeseries, and so forth.
-\item event An event-counting (e.g. X-ray or other high energy) dataset of some sort.  Typically this is instrumental
+\item[\textbf{event}] An event-counting (e.g. X-ray or other high energy) dataset of some sort.  Typically this is instrumental
 data, i.e., {\textquotedbl}event data{\textquotedbl}.  An event dataset is often a complex object containing multiple
 files or other substructures.  An event dataset may contain data with spatial, spectral, and time information for each
 measured event, although the spectral resolution (energy) is sometimes limited.  Event data may be used to produce
 higher level data products such as images or spectra.
-\item measurements A list of derived measurements gathered in a particular original dataset of one of the previous sort
+\item[\textbf{measurements}] A list of derived measurements gathered in a particular original dataset of one of the previous sort
 after some analysis processing, like a source list, or more generally a list of `results' attached to such datasets.
 \end{itemize}
+
 Classification of astronomical data by data product type is inherently ambiguous hence the classification scheme defined
 here is intentionally kept as simple as possible.  The data provider should pick the primary category most appropriate
 for their data. Values must be specified in lower-case (in order to simplify queries).  One of the defined
@@ -458,18 +483,20 @@ belongs to facilitate global data discovery.
 much data reduction/processing has been applied to the data.  It is up to the data providers to consider how to map
 their own internal classification to the suggested classification scale here.
 
-Level 0:  Raw instrumental data, in a proprietary or internal data-provider defined format, that needs instrument
+\begin{itemize}
+\item[\textbf{Level 0:}]  Raw instrumental data, in a proprietary or internal data-provider defined format, that needs instrument
 specific tools to be handled.
 
-Level 1:  Instrumental data in a standard format (FITS, VOTable, SDFITS, ASDM, etc.) which could be manipulated with
+\item[\textbf{Level 1:}]  Instrumental data in a standard format (FITS, VOTable, SDFITS, ASDM, etc.) which could be manipulated with
 standard astronomical packages.
 
-Level 2: Calibrated, science ready data with the instrument signature removed.
+\item[\textbf{Level 2:}] Calibrated, science ready data with the instrument signature removed.
 
-Level 3: Enhanced data products like mosaics, resampled or drizzled images, or heavily processed survey fields.  Level 3
+\item[\textbf{Level 3:}] Enhanced data products like mosaics, resampled or drizzled images, or heavily processed survey fields.  Level 3
 data products may represent the combination of data from multiple primary observations.
 
-Level 4: Analysis data products generated after some scientific data manipulation or interpretation.
+\item[\textbf{Level 4:}] Analysis data products generated after some scientific data manipulation or interpretation.
+\end{itemize}
 
 The examples in the following subsection should help illustrate use of the calib\_level attribute. It is left to the
 data provider to decide for ambiguous cases.
@@ -645,7 +672,7 @@ spectral coverage will be enough to discover data of interest in many common cas
 
 Usage: select * from ivoa.ObsCore where dataproduct\_type='image' returns only image data.
 
-\subsection{ Caveat while using dataproduct\_type=``measurements''}
+\subsubsection{Caveat while using dataproduct\_type=``measurements''}
 Note that ``measurements'' extends the set of accepted values for dataproduct\_type in ObsCore 1.0. This extension is
 meant to expose derived data products together with the progenitor observation dataset.
 
@@ -1049,6 +1076,7 @@ DM
 \bibliography{ivoatex/docrepo, ivoatex/ivoabib, obscore}
 
 \appendix
+
 \section{Use Cases in detail}
 The ability to discover data of a certain kind (images, spectra, cubes, event lists) according to scientific criteria
 (e.g., a given sky position, spectral coverage including spectral line X, spatial resolution better than Y, resolving
@@ -1070,8 +1098,11 @@ A wider set of working examples (beta release), is available at http://saada.uni
 compliant example service developed by Laurent Michel, Mireille Louys and Daniel Durand (May 2016, in progress).
 
 \subsection*{Simple Examples}
+\addcontentsline{toc}{subsection}{Simple Examples}
 
 \subsubsection*{Simple Query by Position}
+\addcontentsline{toc}{subsubsection}{Simple Query by Position}
+
 Show me a list of all data that satisfies:
 \begin{enumerate}
 \item Datatype=any
@@ -1094,6 +1125,8 @@ service is referenced):
 More constraints are added in the following use-case (1.3).
 
 \subsubsection*{Query Images by both Spatial and Spectral Attributes}
+\addcontentsline{toc}{subsubsection}{Query Images by both Spatial and Spectral Attributes}
+
 Show me a list of all data that satisfies:
 
 \begin{enumerate}
@@ -1220,15 +1253,17 @@ For an input list of RA, DEC, Modified Julian Date (MJD), show me all data that 
 \item DataType=imaging
 \item RA,DEC include the value of  the list ( searchByList) and Observation date is within 1 day of the MJD value
 \end{enumerate}
+
+\begin{lstlisting}[language=SQL,flexiblecolumns=true]
 SELECT * FROM ivoa.Obscore
-
 WHERE dataproduct\_type='image'
-
 AND CONTAINS(POINT('ICRS',user\_ra,user\_dec), s\_region) = 1
-
 AND ABS((t\_max + t\_min)/2 -- user\_date ) {\textless} 1
+\end{lstlisting}
+
 
 \subsection{Discovering spectra data}
+
 \subsubsection{Use case 2.1}
 Spectra with energy bands and above counts threshold
 
@@ -1347,6 +1382,7 @@ Show me a list of all data that satisfies:
 \item Spatial resolution better than 2 arcsec
 \item For  a selected list of SDSS objects
 \end{enumerate}
+
 \subsection[Discovering time series]{Discovering time series}
 \subsubsection[Use case 4.1]{Use case 4.1}
 Times series for a sky position, with date, length and exposure constraints
@@ -1362,6 +1398,7 @@ Show me a list of all data which satisfies:
 \item Observation data before June 10, 2008
 \item Observation data after June 10, 2007
 \end{enumerate}
+
 \subsubsection{Use case 4.2}
 Times series for a sky position, with a minimum of time slots
 
@@ -1378,6 +1415,7 @@ Show me a list of all data which satisfies:
 \item Time interval (start of series to end of series) {\textgreater} 1 year
 \item Number of time slots {\textgreater} 50
 \end{enumerate}
+
 \subsubsection{Use case 4.3}
 Times series for tracking a particular event
 
@@ -1405,6 +1443,7 @@ Show me a list of all event lists observed for a particular phenomenon with cons
 \item Observation data after June 10, 2007
 \item Observation data before June 10, 2008
 \end{enumerate}
+
 \subsubsection{Use case 5.2}
 Matching images and event lists from different data collections
 
@@ -1417,6 +1456,7 @@ GALEX data collection.
 \item Data collection= XMM
 \item Instrument name=EPN
 \end{enumerate}
+
 \subsection[Discovering general data from collections counterparts]{Discovering general data from collections
 counterparts}
 \subsubsection{Use case 6.1}
@@ -1834,6 +1874,7 @@ This is used only to gain some idea of the size of a data product before downloa
 value is required. It is only a useful indication that can help to tune download functionalities in an application
 according to high volumes of data and transfer bit rate.
 
+% B.6
 \subsection{Description of physical axes: Characterisation classes}
 As mentioned in the use-cases, selection criteria for an observation depend on the physical axes contained in the
 dataset especially the position, band, time, and the type of observed quantity that we call ``observable'' in the data
@@ -1841,9 +1882,11 @@ model. The observable axis can cover various types of flux but also velocity, et
 the IVOA Characterisation data model \citep{2008ivoa.spec.0325L} from which we re-use mainly the first and second levels
 of details except for the spatial coverage where the support region (level 3) is used too.
 
+% B.6.1
 \subsubsection{Spatial axis}
-\paragraph[Spatial sampling: number of elements for each coordinate ]{Spatial sampling: number of elements for each
-coordinate}
+
+\addcontentsline{toc}{subsubsection}{    B.6.1.1 Spatial sampling: number of elements for each coordinate }
+\paragraph{B.6.1.1 Spatial sampling: number of elements for each coordinate}
 The number of spatial bins gives an estimation of the size and richness of a dataset in terms of sample points. This
 size information about the data will help the user to decide whether to download or extract a subpart from a discovered
 N-D dataset, like an image or a cube.
@@ -1855,14 +1898,14 @@ of the overall dataset should be specified.
 This information is present in the ObsCore DM as the `numBins' attribute, whose Utype is defined as
 Char.SpatialAxis.numBins1 for the first coordinate, and Char.SpatialAxis.numBins2 for the second one.
 
-\paragraph{The observation reference position: (s\_ra and s\_dec)}
+\addcontentsline{toc}{subsubsection}{    B.6.1.2 The observation reference position: (s\_ra and s\_dec)}
+\paragraph{B.6.1.2 The observation reference position: (s\_ra and s\_dec)}
 Two coordinates in position are used to identify a reference position (typically the center) of an observation in the
 sky, attached to a coordinate system definition.
 
 \begin{itemize}
 \item Coordinate system
-\end{itemize}
-The coordinate system defined in the Characterisation DM is based on the STC:Coordsys class.  The model in principle
+\item[ ] The coordinate system defined in the Characterisation DM is based on the STC:Coordsys class.  The model in principle
 supports all kind of coordinate systems defined in the STC reference list \citep{2009ivoa.rept.1030R}. However, the ObsTAP
 implementation of the model mandates that queries expressed in ICRS should be supported in an ObsTAP service. This
 allows a general query to be sent to multiple archives or data centers, but requires some interpretation /conversion of
@@ -1870,97 +1913,103 @@ coordinates at the server side. Still this is efficient for the large data disco
 in a specific coordinate system will be available via client applications that would do the conversions or adapt the
 coordinate system to some specific servers.
 
-\begin{itemize}
 \item Coordinates
-\end{itemize}
-The model uses the Location Class from the Characterisation DM, with the Utype values:
 
-Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1
+\item[ ] The model uses the Location Class from the Characterisation DM, with the Utype values:
 
-Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2
+\item[ ] \emph{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C1}
 
-whose short names in the ObsCore table are s\_ra and s\_dec. We assume that ObsTAP implements these coordinates in the
+\item[ ] \emph{Char.SpatialAxis.Coverage.Location.Coord.Position2D.Value2.C2}
+
+\item[ ] whose short names in the ObsCore table are s\_ra and s\_dec. We assume that ObsTAP implements these coordinates in the
 ICRS system.
+\end{itemize}
 
 Using other coordinate systems as defined in STC \citep{2009ivoa.rept.1030R} and re-used in the Characterisation DM can be
 considered in client applications in charge of the coordinate translations.
 
-\paragraph{The covered region}
+\addcontentsline{toc}{subsubsection}{    B.6.1.3 The covered region}
+\paragraph{B.6.1.3 The covered region}
 The Coverage class along the spatial axis provides two possible concepts:
 
 \begin{itemize}
-\item Bounds which in turn can use two representations:
-\end{itemize}
-\begin{enumerate}
-\item A bounding box that can estimate very coarsely the coverage of an observation.  It is modeled as a couple of
+\item \textbf{Bounds} which in turn can use two representations:
+
+\item[a)] A \textbf{bounding box} that can estimate very coarsely the coverage of an observation.  It is modeled as a couple of
 intervals on each coordinates with Utypes:
-\end{enumerate}
-Char.SpatialAxis.Coverage.Bounds.Limits.LoLimit2Vec.C1
 
-Char.SpatialAxis.Coverage.Bounds.Limits.HiLimit2Vec.C1
+\item[ ] \emph{Char.SpatialAxis.Coverage.Bounds.Limits.LoLimit2Vec.C1}
 
-Char.SpatialAxis.Coverage.Bounds.Limits.LoLimit2Vec.C2
+\item[ ] \emph{Char.SpatialAxis.Coverage.Bounds.Limits.HiLimit2Vec.C1}
 
-Char.SpatialAxis.Coverage.Bounds.Limits.HiLimit2Vec.C2
+\item[ ] \emph{Char.SpatialAxis.Coverage.Bounds.Limits.LoLimit2Vec.C2}
 
-\begin{enumerate}
-\item The extent of the field of view (s\_fov)
-\end{enumerate}
-The model offers to estimate the size of the diameter of the greater circle encompassing the field of view.
+\item[ ] \emph{Char.SpatialAxis.Coverage.Bounds.Limits.HiLimit2Vec.C2}
+
+\item[b)] The \textbf{extent of the field of view} (s\_fov)
+
+\item[ ] The model offers to estimate the size of the diameter of the greater circle encompassing the field of view.
+\end{itemize}
 
 This is not covered by the Characterisation DM v1.1 but in the new release of Characterisation v2.0 as
-Char.SpatialAxis.Coverage.Bounds.Extent.diameter, a new definition added in Characterisation DM v2.0 (to appear).
+\emph{Char.SpatialAxis.Coverage.Bounds.Extent.diameter}, a new definition added in Characterisation DM v2.0 (to appear).
 
 \begin{itemize}
-\item Support: (s\_region)
-\end{itemize}
-A precise region description of spatial footprint of the dataset using region types like Circle, Polygon, etc., provided
+\item \textbf{Support}: (s\_region)
+
+\item[ ] A precise region description of spatial footprint of the dataset using region types like Circle, Polygon, etc., provided
 in STC.  The Utypes:
 
-Char.SpatialAxis.Coverage.Support.Area
+\item[ ] \emph{Char.SpatialAxis.Coverage.Support.Area}
 
-Char.SpatialAxis.Coverage.Support.AreaType
+\item[ ] \emph{Char.SpatialAxis.Coverage.Support.AreaType}
 
-define this region.
+\item[ ] define this region.
 
-Depending on the version of the TAP service used for distributing the data, this DM element will be mapped differently:
+\item[ ] Depending on the version of the TAP service used for distributing the data, this DM element will be mapped differently:
 see details in the TAP specifications, version 1.0 and above)
+\end{itemize}
 
-\paragraph{Spatial Resolution (s\_resolution)}
-The minimal size that can be distinguished along the spatial axis, s\_resolution is specified in arcseconds and has the
-following Utype: Char.SpatialAxis.Resolution.Refval.value
+\addcontentsline{toc}{subsubsection}{    B.6.1.4 Spatial Resolution (\emph{s\_resolution})}
+\paragraph{B.6.1.4 Spatial Resolution (\emph{s\_resolution})}
+The minimal size that can be distinguished along the spatial axis, \emph{s\_resolution} is specified in arcseconds and has the
+following Utype: \emph{Char.SpatialAxis.Resolution.Refval.value}
 
 When this value is difficult to evaluate or inadequate, the range of possible resolution can be given in the optional
-data model fields: s\_resolution\_min and s\_resolution\_max, as shown in Table 7.
+data model fields: \emph{s\_resolution\_min} and \emph{s\_resolution\_max}, as shown in Table 7.
 
-\paragraph{Astrometric Calibration Status: (s\_calib\_status)}
+\addcontentsline{toc}{subsubsection}{    B.6.1.5 Astrometric Calibration Status: (\emph{s\_calib\_status})}
+\paragraph{B.6.1.5 Astrometric Calibration Status (\emph{s\_calib\_status})}
 A string to encode the calibration status along the spatial axis (astrometry).
 
 Possible values could be \{uncalibrated, raw, calibrated\} and correspond to the Utype
-Char.SpatialAxis.calibrationStatus
+\emph{Char.SpatialAxis.calibrationStatus}
 
-For some observations, only the pointing position is provided (s\_calib\_status =''uncalibrated''). Some other may have
-a raw linear relationship between the pixel coordinates and the world coordinates (s\_calib\_status =''raw'').
+For some observations, only the pointing position is provided (\emph{s\_calib\_status} = ''uncalibrated''). Some other may have
+a raw linear relationship between the pixel coordinates and the world coordinates (\emph{s\_calib\_status} = ''raw'').
 
-\paragraph{Astrometric precision (s\_stat\_error)}
+\addcontentsline{toc}{subsubsection}{    B.6.1.6 Astrometric precision (\emph{s\_stat\_error})}
+\paragraph{B.6.1.6 Astrometric precision (\emph{s\_stat\_error})}
 This parameter gives an estimate of the astrometric statistical error after the astrometric calibration phase.  The
-corresponding Utype is:  Char.SpatialAxis.Accuracy.StatError.Refval.value
+corresponding Utype is:  \emph{Char.SpatialAxis.Accuracy.StatError.Refval.value}
 
-\paragraph{Spatial sampling (s\_pixel\_scale)}
+\addcontentsline{toc}{subsubsection}{    B.6.1.7 Spatial sampling (\emph{s\_pixel\_scale})}
+\paragraph{B.6.1.7 Spatial sampling (\emph{s\_pixel\_scale})}
 This corresponds to the sampling precision of the data along the spatial axis. It is stored as a real number
 corresponding to the spatial sampling period, i.e., the distance in world coordinates system units between two pixel
 centers.  It may contain two values if the pixels are rectangular.
 
+% B.6.2
 \subsubsection{Spectral axis}
 This axis is generally used to represent different kinds of physical measurements: wavelength, energy, frequency or some
 interpretation of this with respect to a reference position like velocity.
 
-The data model distinguishes the various flavors of this axis using the UCD attached to it, Char.SpectralAxis.ucd named
-as em\_ucd in ObsTAP optional fields.  Possible values for this UCD are defined in the Spectrum DM
+The data model distinguishes the various flavors of this axis using the UCD attached to it, \emph{Char.SpectralAxis.ucd} named
+as \emph{em\_ucd} in ObsTAP optional fields.  Possible values for this UCD are defined in the Spectrum DM
 \citep{2011ivoa.spec.1120M} in section 4.1.
 
 Depending on the UCD used to specify the axis, the ObsCore model allows to describe the spectral coordinates in a
-relevant unit, corresponding to the spectral quantity, and specified in the model in Char.SpectralAxis.unit (em\_unit)
+relevant unit, corresponding to the spectral quantity, and specified in the model in \emph{Char.SpectralAxis.unit} (\emph{em\_unit})
 
 Here is a short list of preferred value for the Observation data model Core Components extracted from the recommended
 values proposed in the Spectrum DM:
@@ -1978,56 +2027,63 @@ Energy & em.energy & keV, J, erg\\\hline
 Note that for the ObsTAP implementation, the Spectral axis coordinates are constrained as a wavelength quantity
 expressed in meters as mentioned in section \ref{bkm:Ref285651639}
 
-\paragraph[Number of spectral sampling elements (em\_xel)]{Number of spectral sampling elements (em\_xel)}
+\addcontentsline{toc}{subsubsection}{    B.6.2.1 Number of spectral sampling elements (\emph{em\_xel})}
+\paragraph{B.6.2.1 Number of spectral sampling elements (\emph{em\_xel})}
 Number of values spanned along the spectral axis, corresponding to Utype
 
-Char.SpectralAxis.numBins
+\emph{Char.SpectralAxis.numBins}
 
-\paragraph[Spectral calibration status (em\_calib\_status)]{Spectral calibration status (em\_calib\_status)}
+\addcontentsline{toc}{subsubsection}{    B.6.2.2 Spectral calibration status (\emph{em\_calib\_status})}
+\paragraph{B.6.2.2 Spectral calibration status (\emph{em\_calib\_status})}
 This attribute of the spectral axis indicates the status of the data in terms of spectral calibration. Possible values
-are defined in the Characterisation Data Model and belong to \{uncalibrated , calibrated,  relative, absolute\}.
+are defined in the Characterisation Data Model and belong to \{uncalibrated, calibrated,  relative, absolute\}.
 
-\paragraph{Spectral Bounds}
-\label{bkm:Ref419133828}These are the limits of the spectral interval covered by the observation, in short em\_min and
-em\_max.
+\addcontentsline{toc}{subsubsection}{    B.6.2.3 Spectral Bounds}
+\paragraph{B.6.2.3 Spectral Bounds}
+\label{bkm:Ref419133828}These are the limits of the spectral interval covered by the observation, in short \emph{em\_min} and
+\emph{em\_max}.
 
 These limiting values are compatible with definitions of the physical quantity defined in the ucd and unit fields.
 
 In the ObsTAP implementation such values are expressed as wavelength but using meters as units, as it is easily
 convertible.
 
-\paragraph{Spectral Resolution}
+\addcontentsline{toc}{subsubsection}{    B.6.2.4 Spectral Resolution}
+\paragraph{B.6.2.4 Spectral Resolution}
 As in the Characterisation data model we distinguish a reference value of the point spread function along the spectral
 axis from the resolution power along this axis, more appropriate when the resolution varies along the spectral axis.
 Only one of the following is needed in the data model:
 
-A reference value for Spectral Resolution (em\_resolution)
+\begin{itemize}
+\item[a)] A reference value for \textbf{Spectral Resolution (\emph{em\_resolution})}
 
-A mean estimate of the resolution, e.g. Full Width at Half Maximum (FWHM) of the Line Spread Function (or LSF).  This
-can be used for narrow range spectra whereas in the majority of cases, the resolution power is preferable due to the
-LSF variation along the spectral axis. The corresponding Utype is Char.SpectralAxis.Resolution.Refval.value.
+\item[ ] can be used for narrow range spectra whereas in the majority of cases, the resolution power is preferable due to the
+LSF variation along the spectral axis. The corresponding Utype is \emph{Char.SpectralAxis.Resolution.Refval.value}.
 
-A reference value for Resolving Power (em\_res\_power)
+\item[b)] A reference value for \textbf{Resolving Power (em\_res\_power)}
 
-This is an average estimation for the spectral resolution power stored as a double value, with no
-unit.\ \ Char.SpectralAxis.Resolution.ResolPower refval
+\item[ ] This is an average estimation for the spectral resolution power stored as a double value, with no
+unit. \emph{Char.SpectralAxis.Resolution.ResolPower refval}
 
-Resolving Power limits (em\_res\_power\_min, em\_res\_power\_max)
+\item[c)] \textbf{Resolving Power limits (em\_res\_power\_min, em\_res\_power\_max)}
 
-These parameters simply give the limits of variation of the resolution power in the observation as minimal and maximal
+\item[ ] These parameters simply give the limits of variation of the resolution power in the observation as minimal and maximal
 values and use the following Utypes:
 
-Char.SpectralAxis.Resolution.ResolPower.LoLimit
+\item[ ] \emph{Char.SpectralAxis.Resolution.ResolPower.LoLimit}
 
-Char.SpectralAxis.Resolution.ResolPower.HiLimit
+\item[ ] \emph{Char.SpectralAxis.Resolution.ResolPower.HiLimit}
+\end{itemize}
 
-\paragraph{Accuracy along the spectral axis (em\_stat\_error)}
+\addcontentsline{toc}{subsubsection}{    B.6.2.5 Accuracy along the spectral axis (\emph{em\_stat\_error})}
+\paragraph{B.6.2.5 Accuracy along the spectral axis (\emph{em\_stat\_error})}
 This is also provided in the Characterisation data model, using the item mapped to the Utype:
-Char.SpectralAxis.Accuracy.StatError.Refval.value and, stored in the same units as all the other spectral quantities.
+\emph{Char.SpectralAxis.Accuracy.StatError.Refval.value} and, stored in the same units as all the other spectral quantities.
 
-\subsubsection{Doppler/Redshift datasets}
+\addcontentsline{toc}{subsubsection}{    B.6.2.6 Doppler/Redshift datasets}
+\paragraph{B.6.2.6 Doppler/Redshift datasets}
 Dataset including an axis representing Doppler velocity (e.g., a velocity cube) can be discovered using this
-specification. This can be indicated by specifying an appropriate value for the optional em\_ucd attribute, defining
+specification. This can be indicated by specifying an appropriate value for the optional \emph{em\_ucd} attribute, defining
 the type of velocity on the axis. The following UCD values are defined to represent velocities:
 
 %\newpage % Force a new page
@@ -2043,8 +2099,8 @@ spect.doppler.z & Redshift derived from a spectral feature\\\hline
 \vspace{0.3cm}
 
 
-If em\_ucd contains one of these strings, then the discovered datasets can be any velocity or redshift data product.
-However the spectral coverage of the dataset should still be specified in em\_min, em\_max as the vacuum wavelength in
+If \emph{em\_ucd} contains one of these strings, then the discovered datasets can be any velocity or redshift data product.
+However the spectral coverage of the dataset should still be specified in \emph{em\_min}, \emph{em\_max} as the vacuum wavelength in
 meters, as detailed in section \ref{bkm:Ref419133828}.
 
 Obscore v1.1 does not support the full description of  properties along a redshift axis but allows to discover data sets
@@ -2052,35 +2108,44 @@ expressed in velocity units  or optical redshift but characterized by a coverage
 interval around one particular emission line.
 
 \subsubsection{Time axis}
-\paragraph[Time coverage (t\_min, t\_max, t\_exptime)]{Time coverage (t\_min, t\_max, t\_exptime)}
-Three time stamps are used: t\_min, t\_max, usually equals to start and stop time and t\_exptime the exposure time.
+
+\addcontentsline{toc}{subsubsection}{    B.6.3.1 Time coverage (\emph{t\_min}, \emph{t\_max}, \emph{t\_exptime})}
+\paragraph{B.6.3.1 Time coverage (\emph{t\_min}, \emph{t\_max}, \emph{t\_exptime})}
+Three time stamps are used: \emph{t\_min}, \emph{t\_max}, usually equals to start and stop time and \emph{t\_exptime} the exposure time.
 These must be stored in MJD format, much preferable for easy calculations. Other information is given in subsection
 \ref{bkm:Ref285666427} and \ref{bkm:Ref285666434}.
 
-\paragraph{Time resolution (t\_resolution)}
+\addcontentsline{toc}{subsubsection}{    B.6.3.2 Time resolution (\emph{t\_resolution})}
+\paragraph{B.6.3.2 Time resolution (\emph{t\_resolution})}
 Estimated or average value of the temporal resolution with Utype
 
 Char.TimeAxis.Resolution.Refval.value
 
-\paragraph{Time axis: number of sampling elements (t\_xel)}
+\addcontentsline{toc}{subsubsection}{    B.6.3.3 Time axis: number of sampling elements (\emph{t\_xel})}
+\paragraph{B.6.3.3 Time axis: number of sampling elements (\emph{t\_xel})}
 Number of values spanned along the time axis, corresponding to Utype
 
 Char.TimeAxis.numBins. For a single shot observation, an image or spectrum or cube , t\_xel equals 1, and for a  time
 series, t\_xel contains the number of different shots, and can be a valuable criterium to retain or discard a dataset
 for further time varying analysis.
 
-\paragraph{Time Calibration Status: (t\_calib\_status)}
+\addcontentsline{toc}{subsubsection}{    B.6.3.4 Time Calibration Status: (\emph{t\_calib\_status})}
+\paragraph{B.6.3.4 Time Calibration Status: (\emph{t\_calib\_status})}
 This parameter gives the status of time axis calibration. This is especially useful for time series.
 
-Possible values are principally \{ uncalibrated, calibrated, raw, relative\}. This may be extended for specific time
+Possible values are principally \{uncalibrated, calibrated, raw, relative\}. This may be extended for specific time
 domain collections.
 
-\paragraph{Time Calibration Error: (t\_stat\_error)}
+\addcontentsline{toc}{subsubsection}{    B.6.3.5 Time Calibration Error: (\emph{t\_stat\_error})}
+\paragraph{B.6.3.5 Time Calibration Error: (\emph{t\_stat\_error})}
 A parameter used if we can estimate a statistical error on the time measurements (for time series again). This value is
 expressed in seconds.
 
-\subsubsection{Observable Axis:}
-\subsubsection{Nature of the observed quantity (o\_ucd)}
+% B.6.4
+\subsubsection{Observable Axis}
+
+\addcontentsline{toc}{subsubsection}{    B.6.4.1 Nature of the observed quantity (\emph{o\_ucd})}
+\paragraph{B.6.4.1 Nature of the observed quantity (\emph{o\_ucd})}
 Most observations measure some flux quantity depending on position, spectral coordinate, or time.  Here we consider a
 more general axis: the ``observable axis'' that can be either flux or any other quantity, the nature of which is
 specified by the UCD attached to this axis.
@@ -2098,7 +2163,8 @@ providers may want to describe in their archive. The units used to encode values
 specified in Char.ObservableAxis.unit and can be exposed in ObsTAP with the optional field o\_unit. See examples of
 unit strings in the table mentioned above.
 
-\subsubsection{Calibration status on observable (Flux or other) (o\_calib\_status)}
+\addcontentsline{toc}{subsubsection}{    B.6.4.2 Calibration status on observable (Flux or other) (\emph{o\_calib\_status})}
+\paragraph{B.6.4.2 Calibration status on observable (Flux or other) (\emph{o\_calib\_status})}
 This describes the calibration applied on the Flux observed (or other observable quantity).
 
 It is a string to be selected in \{absolute, relative, normalized, any\} as defined in the SSA specification
@@ -2107,6 +2173,7 @@ It is a string to be selected in \{absolute, relative, normalized, any\} as defi
 This list can be extended or updated for instance using an extension mechanism similar to the definition of new UCDs in
 the IVOA process, following the feedback from implementations of ObsTAP services.
 
+% B.6.5
 \subsubsection{Polarization measurements (pol\_states, pol\_xel)}
 \label{bkm:Ref482804077}\label{bkm:Ref482802717}This covers the case when the observed flux was recorded for various
 states of a polarizer. Then the dataset can be: a set of images, a set of spectra, a set of spectral cubes with various
@@ -2118,7 +2185,8 @@ In this case, o\_ucd should at least contain the substring `phys.polarisation' l
 strings like in ``phot.flux.density;phys.polarisation.Stokes.I'', etc. as shown in the list of observable UCD cited
 above.
 
-\subsubsection{List of polarization states (pol\_states)}
+\addcontentsline{toc}{subsubsection}{    B.6.5.1 List of polarization states (\emph{pol\_states})}
+\paragraph{B.6.5.1 List of polarization states (\emph{pol\_states})}
 In order to gather the polarization information, we define a polarization axis which is degenerated as compared to other
 axes, but describes necessary polarization properties of the dataset. Char.PolarizationAxis.stateList contains the list
 of the various polarization modes present in the dataset.
@@ -2132,25 +2200,31 @@ polarization definition.
 
 Then a query can be easily written like:
 
+\begin{lstlisting}[language=SQL,flexiblecolumns=true]
 SELECT * WHERE pol\_states LIKE '\%Y\%'
+\end{lstlisting}
 
 which brings back all polarization moments of type :Y XY YX YY
 
 On the contrary,
 
+\begin{lstlisting}[language=SQL,flexiblecolumns=true]
 SELECT * WHERE pol\_states LIKE '\%/Y/\%'
+\end{lstlisting}
 
 selects only datasets containing Y polarization state.
 
 See A. Richards 's IVOA Note \citep{IVOANote:Polarisation} for the context of polarization data .
 
-\subsubsection{Number of polarization elements (pol\_xel)}
-pol\_xel specifies the number of different polarization states present in the data. Its Utype in the Obscore DM is
+\addcontentsline{toc}{subsubsection}{    B.6.5.2 Number of polarization elements (\emph{pol\_xel})}
+\paragraph{B.6.5.2 Number of polarization elements (\emph{pol\_xel})}
+\emph{pol\_xel} specifies the number of different polarization states present in the data. Its Utype in the Obscore DM is
 Char.PolarizationAxis.numBins. The default value is 0, indicating that polarization was not explicitly observed.
 
-If an effective polarization measurement has been made, then pol\_xel should be specified as 1 or greater and
-pol\_states should contain the list of states recorded in the dataset.
+If an effective polarization measurement has been made, then \emph{pol\_xel} should be specified as 1 or greater and
+\emph{pol\_states} should contain the list of states recorded in the dataset.
 
+% B.6.6
 \subsubsection{Additional Parameters on Observable axis}
 When implementing an ObsTAP service, the archive manager may need to publish some parameters not present in the current
 version of ObsCore.
@@ -2171,39 +2245,42 @@ o\_stat\_error\_type   & adql:VARCHAR   & 20 & NULL & NULL & \seqsplit{stat.erro
 \normalsize
 
 
-Possible values of o\_stat\_error\_type could be: \{poisson, gauss, speckle\} and mentioned in the description of
+Possible values of \emph{o\_stat\_error\_type} could be: \{poisson, gauss, speckle\} and mentioned in the description of
 additional columns (See section \ref{bkm:Ref421297012} for more details)
 
-o\_ stat\_error \_mean, o\_ stat\_error \_sigma can be defined as the parameters for the Gaussian case
+\emph{o\_ stat\_error \_mean}, \emph{o\_ stat\_error\_sigma} can be defined as the parameters for the Gaussian case
 
-o\_ stat\_error\_poisson can be defined as the Poisson gain, etc.
+\emph{o\_ stat\_error\_poisson} can be defined as the Poisson gain, etc.
 
 In case of these optional fields, defined by the data provider, the Utype column in the ObsCore table has a NULL value.
 
+% B.7
 \subsection{Provenance}
 \label{bkm:Ref482804135}Provenance contains a class to represent the entire Observing configuration used to acquire an
 observation.  Instrumental parameters are gathered here.
 
-\subsubsection{Facility (facility\_name)}
+\subsubsection{Facility (\emph{facility\_name})}
 The Facility class codes information about the observatory or facility used to collect the data. In this model we define
-one attribute of Utype Provenance.ObsConfig.facility.name which re-uses the Facility concept defined in the
+one attribute of Utype \emph{Provenance.ObsConfig.facility.name} which re-uses the Facility concept defined in the
 VODataService specification \citep{2010ivoa.spec.1202P}.
 
- For combined observations stemming from multiple facilities the name may contain a list of comma separated strings, or
+For combined observations stemming from multiple facilities the name may contain a list of comma separated strings, or
 the word {\textquotedbl}Many{\textquotedbl}; if the list is too long, as defined in the VODataservice specification.
 
 The definition of a list of possible name values could be a task for the IVOA Semantic working group, starting from
 various facilities and instruments lists resources published in the community.
 
-\subsubsection{Instrument name (instrument\_name)}
+\subsubsection{Instrument name (\emph{instrument\_name})}
 The name of the instrument used for the acquisition of the observation.  It is given in the model as
-Provenance.ObsConfig.instrument.name and encoded as a string. The possible name values could be checked in coordination
+\emph{Provenance.ObsConfig.instrument.name} and encoded as a string. The possible name values could be checked in coordination
 with the Semantic WG too. Multiple values are also allowed for complex observations as defined for facility name.
 
-\subsubsection{Proposal (proposal\_id)}
+\subsubsection{Proposal (\emph{proposal\_id})}
 Each proposal has an identifier attribute that can be used to collect all observations and data products related to the
-same proposal. The corresponding Utype will simply be Provenance.Proposal.identifier .
+same proposal. The corresponding Utype will simply be \emph{Provenance.Proposal.identifier}.
 
+\vspace{0.3cm}
+\noindent
 [NB: Here is presented only a minimal set of information on the instrumental configuration. See future documents on
 Provenance data model.]
 
@@ -2212,18 +2289,18 @@ Provenance data model.]
 There are various implementations of ObsCore in TAP, following the evolution of the TAP protocol and ADQL.
 
 CADC and XMM have reference implementations for ObsCore 1.0 available via the VO application TapHandle 2.0
-(http://saada.unistra.fr/taphandle/) for instance.
+(\url{http://saada.unistra.fr/taphandle/}) for instance.
 
 These sites are currently updating their ObsTAP service to version 1.1.
 
 Check the registry for ObsTAP services serving ObsCore v 1.1 metadata
 
-\subsection{ObsCore 1.0 first examples}
+\subsubsection{ObsCore 1.0 first examples}
 \label{bkm:Ref303703299} Examples of the ObsTAP use-cases and ObsTAP Schema can be found at the following URL:
 
-http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/cvo/ObsCore/
+\url{http://www.cadc-ccda.hia-iha.nrc-cnrc.gc.ca/cvo/ObsCore/}
 
-\subsection{Implementing a package of multiple data products}
+\subsubsection{Implementing a package of multiple data products}
 This example shows how to describe a complex observation dataset, referenced by its obs\_id field and containing
 different data products, all packed together in an archive file.
 
@@ -2269,22 +2346,24 @@ For Utypes created from the UML ObsCore model, we apply these rules:
 \item For classes referencing one other class, we use the name of the reference or role, and not the one of the pointed
 class.
 \end{itemize}
+
 The meaning of the various columns corresponds to the definitions of the TAP IVOA standard \citep{2010ivoa.spec.0327D}. See
 section 2.6.3 for the description of columns attributes.
 
 As a reminder, the last three columns are implementation oriented:
 
-{}`principal': means that this item is of main importance, and for instance is recommended in a select or should be
+\begin{itemize}
+\item[`principal':] means that this item is of main importance, and for instance is recommended in a select or should be
 shown in first priority in a query response.
-
 This is not equivalent to the mandatory status of the field. All mandatory fields are principal, but some optional
 fields may be considered `principal'.
 
-{}`std': means this column is defined by some IVOA standard as opposed to a customized metadata defined by a specific
+\item[`std':] means this column is defined by some IVOA standard as opposed to a customized metadata defined by a specific
 service.
 
-{}`indexed': tells if this column can be used as table index to optimize queries. Possible values for each of these
+\item[`indexed':] tells if this column can be used as table index to optimize queries. Possible values for each of these
 three fields are integers, with this convention: (0=false, 1=true).
+\end{itemize}
 
 Tables \ref{table:tapschema-mandatory1} and \ref{table:tapschema-mandatory2} show TAP\_SCHEMA.columns values for the mandatory fields of an ObsTAP table. All Utypes have the data model
 namespace prefix {}``obscore:'' omitted in the table. The Datatype, Size, Principal, Index, and Std values shown here
@@ -2756,6 +2835,15 @@ TAP response.
 % ML : use listing environment instead
 
 %\begin{lstlisting} [language=XML, caption= Query Response]{VOtableResponseExemple.xml}
+% Customize tag and attribute highlighting
+
+\lstinputlisting[
+    language=XML,
+    caption={Query Response},
+    label={lst:xml_example},
+    basicstyle=\ttfamily\small,
+    breaklines=true
+]{VOtableResponseExemple.xml}
 
 
 \end{document}
