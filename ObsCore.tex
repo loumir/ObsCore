@@ -378,10 +378,9 @@ Table \ref{tab:1} lists the data model elements that any ObsTAP implementation m
 exist, though, in some cases, it could be nillable).  Provision of these mandatory fields ensures that any query based
 on these parameters is guaranteed to be understood by all ObsTAP services.
 
+
 NB: Data model fields are listed here with their TAP column name rather than the IVOA data model element identifiers
 (Utype) to ease readability.  See the associated Utypes in Appendix C.
-
-The current table counter is: \arabic{table}.
 
 %\begin{table}[htbp]
 %\begin{center}
@@ -439,31 +438,32 @@ content and organization of a dataset.  We consider a coarse classification of t
 science usage, covering: image, cube, spectrum, SED, time series, visibility data, and event data.
 
 \begin{itemize}
-\item image An astronomical image, typically a 2D image with two spatial axes, e.g., a FITS image.  The image content
+\item[\textbf{image}] An astronomical image, typically a 2D image with two spatial axes, e.g., a FITS image.  The image content
 may be complex, e.g., an objective-grism observation would be considered a type of image, even though an extracted
 spectrum would be a Spectrum data product.
-\item cube  A multidimensional astronomical image with 3 or more image axes, e.g., a spectral image cube, a polarization
+\item[\textbf{cube}]  A multidimensional astronomical image with 3 or more image axes, e.g., a spectral image cube, a polarization
 cube, a full Stokes radio data cube, a time image cube, etc.  The most common format for astronomical ``cube'' data
 products is a multidimensional FITS image, however other formats are allowed so long as they are adequately described.
-\item spectrum Any dataset for which spectral coverage is the primary attribute, e.g., a 1D spectrum or a long slit
+\item[\textbf{spectrum}] Any dataset for which spectral coverage is the primary attribute, e.g., a 1D spectrum or a long slit
 spectrum.
-\item sed  A spectral energy distribution, an advanced data product often produced by combining data from multiple
+\item[\textbf{sed}]  A spectral energy distribution, an advanced data product often produced by combining data from multiple
 observations.
-\item timeseries A one dimensional array presenting some quantity as a function of time.  A light curve is a typical
+\item[\textbf{timeseries}] A one dimensional array presenting some quantity as a function of time.  A light curve is a typical
 example of a time series dataset.
-\item visibility A visibility (radio) dataset of some sort.  Typically this is instrumental data, i.e.,
+\item[\textbf{visibility}] A visibility (radio) dataset of some sort.  Typically this is instrumental data, i.e.,
 {\textquotedbl}visibility data{\textquotedbl}.  A visibility dataset is often a complex object containing multiple
 files or other substructures.  A visibility dataset may contain data with spatial, spectral, time, and polarization
 information for each measured visibility, hence can be used to produce higher level data products such as image,
 spectra, timeseries, and so forth.
-\item event An event-counting (e.g. X-ray or other high energy) dataset of some sort.  Typically this is instrumental
+\item[\textbf{event}] An event-counting (e.g. X-ray or other high energy) dataset of some sort.  Typically this is instrumental
 data, i.e., {\textquotedbl}event data{\textquotedbl}.  An event dataset is often a complex object containing multiple
 files or other substructures.  An event dataset may contain data with spatial, spectral, and time information for each
 measured event, although the spectral resolution (energy) is sometimes limited.  Event data may be used to produce
 higher level data products such as images or spectra.
-\item measurements A list of derived measurements gathered in a particular original dataset of one of the previous sort
+\item[\textbf{measurements}] A list of derived measurements gathered in a particular original dataset of one of the previous sort
 after some analysis processing, like a source list, or more generally a list of `results' attached to such datasets.
 \end{itemize}
+
 Classification of astronomical data by data product type is inherently ambiguous hence the classification scheme defined
 here is intentionally kept as simple as possible.  The data provider should pick the primary category most appropriate
 for their data. Values must be specified in lower-case (in order to simplify queries).  One of the defined
@@ -483,18 +483,20 @@ belongs to facilitate global data discovery.
 much data reduction/processing has been applied to the data.  It is up to the data providers to consider how to map
 their own internal classification to the suggested classification scale here.
 
-Level 0:  Raw instrumental data, in a proprietary or internal data-provider defined format, that needs instrument
+\begin{itemize}
+\item[\textbf{Level 0:}]  Raw instrumental data, in a proprietary or internal data-provider defined format, that needs instrument
 specific tools to be handled.
 
-Level 1:  Instrumental data in a standard format (FITS, VOTable, SDFITS, ASDM, etc.) which could be manipulated with
+\item[\textbf{Level 1:}]  Instrumental data in a standard format (FITS, VOTable, SDFITS, ASDM, etc.) which could be manipulated with
 standard astronomical packages.
 
-Level 2: Calibrated, science ready data with the instrument signature removed.
+\item[\textbf{Level 2:}] Calibrated, science ready data with the instrument signature removed.
 
-Level 3: Enhanced data products like mosaics, resampled or drizzled images, or heavily processed survey fields.  Level 3
+\item[\textbf{Level 3:}] Enhanced data products like mosaics, resampled or drizzled images, or heavily processed survey fields.  Level 3
 data products may represent the combination of data from multiple primary observations.
 
-Level 4: Analysis data products generated after some scientific data manipulation or interpretation.
+\item[\textbf{Level 4:}] Analysis data products generated after some scientific data manipulation or interpretation.
+\end{itemize}
 
 The examples in the following subsection should help illustrate use of the calib\_level attribute. It is left to the
 data provider to decide for ambiguous cases.
